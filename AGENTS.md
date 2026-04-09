@@ -23,14 +23,30 @@ Treat this as production code, not a prototype. Be conservative: ask before addi
 ## Available Skills
 Use these skills for detailed patterns on-demand:
 
+> - [`typescript-advanced-types`](./.claude/skills/typescript-advanced-types) - Const types, flat interfaces
+> - [`vercel-react-best-practices`](./.claude/skills/vercel-react-best-practices) - React 19, Next.js 15, App Router, Server Actions
+> - [`tailwind-4-docs`](./.claude/skills/tailwind-4-docs) - cn() utility, Tailwind 4 patterns
+> - [`find-skills`](./.claude/skills/find-skills) - Search for AI agent skills
+> - [`openspec-propose`](./.claude/skills/openspec-propose) - Propose a new change
+> - [`openspec-apply-change`](./.claude/skills/openspec-apply-change) - Implement tasks from a change
+> - [`openspec-explore`](./.claude/skills/openspec-explore) - Explore ideas and clarify requirements
+> - [`openspec-archive-change`](./.claude/skills/openspec-archive-change) - Archive a completed change
+
+
 ### Auto-invoke Skills
 
 When performing these actions, ALWAYS invoke the corresponding skill FIRST:
 
 | Action                                                    | Skill                         |
 | --------------------------------------------------------- | ----------------------------- |
-
-
+| App Router / Server Actions                               | `vercel-react-best-practices` |
+| Working with Tailwind classes                             | `tailwind-4-docs`             |
+| Writing React components                                  | `vercel-react-best-practices` |
+| Writing TypeScript types/interfaces                       | `typescript-advanced-types`   |
+| Searching for patterns or best practices for new features | `find-skills`                 |
+| Proposing a new feature or change                         | `openspec-propose`            |
+| Implementing tasks from a change                          | `openspec-apply-change`       |
+| Exploring ideas or requirements                           | `openspec-explore`            |
 
 ### Skill Maintenance
 
