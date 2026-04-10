@@ -40,8 +40,12 @@ The TypeScript compiler and Next.js bundler SHALL resolve `@/` imports to the pr
 - **THEN** the bundler resolves the path correctly and the page renders without import errors
 
 ### Requirement: Minimal app shell renders
-The project SHALL include a minimal `app/page.tsx` that renders without errors, confirming the stack is wired up correctly.
+The system SHALL render the full two-column app shell at `http://localhost:3000`, replacing the previous minimal placeholder. `app/page.tsx` SHALL import and render the `AppShell` component from `components/layout/AppShell.tsx` with no additional logic.
 
-#### Scenario: Home page renders
+#### Scenario: Home page renders the app shell
 - **WHEN** developer navigates to `http://localhost:3000`
-- **THEN** a page renders in the browser with no console errors
+- **THEN** the two-column layout renders with the category panel on the left and the preview panel on the right, with no console errors
+
+#### Scenario: app/page.tsx contains no business logic
+- **WHEN** `app/page.tsx` is inspected
+- **THEN** it contains only the import and render of `AppShell`; no state, no data fetching, no conditional rendering
