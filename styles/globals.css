@@ -1,1 +1,87 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+
+  /* Design system tokens */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* ── Dark-first design system: black / white / orange ─────────────────── */
+:root {
+  /* Backgrounds */
+  --background: oklch(0.07 0 0); /* #0a0a0a — near-black page bg */
+  --surface: oklch(0.11 0 0); /* #141414 — panel / card bg */
+  --card: oklch(0.11 0 0);
+  --card-foreground: oklch(0.97 0 0);
+  --popover: oklch(0.13 0 0);
+  --popover-foreground: oklch(0.97 0 0);
+
+  /* Text */
+  --foreground: oklch(0.97 0 0); /* #fafafa — primary text */
+  --muted-foreground: oklch(0.52 0 0); /* #737373 — muted text */
+
+  /* Borders & inputs */
+  --border: oklch(0.2 0 0); /* #262626 — subtle borders */
+  --input: oklch(0.2 0 0);
+  --ring: oklch(0.705 0.213 47.604); /* orange ring */
+
+  /* Orange accent — all actions and highlights */
+  --accent: oklch(0.705 0.213 47.604); /* orange-500 #f97316 */
+  --accent-foreground: oklch(0.97 0 0);
+
+  /* Primary maps to orange (buttons, links) */
+  --primary: oklch(0.705 0.213 47.604);
+  --primary-foreground: oklch(0.97 0 0);
+
+  /* Secondary is a subtle dark surface */
+  --secondary: oklch(0.17 0 0);
+  --secondary-foreground: oklch(0.97 0 0);
+
+  /* Muted backgrounds */
+  --muted: oklch(0.17 0 0);
+
+  /* Destructive */
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

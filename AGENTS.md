@@ -2,11 +2,13 @@
 
 ## Table of Contents
 - [Project Context](#project-context)
+- [Available Skills](#available-skills)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Conventions](#conventions)
 - [Styles](#styles)
 - [Workflows](#workflows)
+- [Patterns](#patterns)
 - [Anti-patterns](#anti-patterns)
 - [Testing](#testing)
 
