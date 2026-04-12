@@ -1,17 +1,4 @@
-# Spec: preview-panel
-
-## Purpose
-
-TBD — defines the right-column panel that displays the assembled markdown output in editor or rendered preview modes, with copy and export actions.
-
-## Requirements
-
-### Requirement: Preview panel header is sticky with view toggle and action buttons
-The system SHALL render a sticky header at the top of the right column containing an Editor / Preview toggle and Copy and Export buttons.
-
-#### Scenario: Header is always visible
-- **WHEN** the user scrolls the preview content
-- **THEN** the header with toggle and buttons remains pinned at the top of the right column
+## MODIFIED Requirements
 
 ### Requirement: Preview panel header view toggle shows "Editor" and "Preview" options
 The system SHALL render a sticky header with a toggle containing two options: "Editor" and "Preview" (replacing the previous "Code" and "Preview" options).
@@ -50,23 +37,8 @@ The system SHALL render the assembled `nodes.map(n => n.content).join('\n\n')` u
 - **WHEN** the active view is "preview" and the node array is empty
 - **THEN** the placeholder message is displayed
 
-### Requirement: Copy button copies markdown to clipboard
-The system SHALL copy the current `markdownOutput` string to the system clipboard when the user clicks Copy.
+## REMOVED Requirements
 
-#### Scenario: Copy succeeds
-- **WHEN** the user clicks the Copy button
-- **THEN** `markdownOutput` is written to the clipboard and the button shows a brief success indicator (e.g., label changes to "Copied!")
-
-### Requirement: Export button downloads the markdown as a .md file
-The system SHALL trigger a browser file download of `markdownOutput` as `AGENTS.md` when the user clicks Export.
-
-#### Scenario: Export triggers file download
-- **WHEN** the user clicks the Export button
-- **THEN** the browser initiates a download of a file named `AGENTS.md` containing the current `markdownOutput`
-
-### Requirement: Switching views preserves scroll position within each view
-The system SHALL maintain independent scroll positions for the Editor and Preview views so switching between them does not reset the user's reading position.
-
-#### Scenario: Scroll position is preserved on view switch
-- **WHEN** the user scrolls down in Editor view and then switches to Preview view and back
-- **THEN** the Editor view restores to the same scroll position it was at before switching
+### Requirement: Code view renders raw markdown in a monospace editor-style area
+**Reason**: The "Code" view is replaced by the "Editor" view backed by CodeMirror 6. A read-only `<pre>` display is no longer needed — the editor itself shows raw markdown and is fully editable.
+**Migration**: Replace `CodeView` component with `EditorView`. Update all `activeView === "code"` comparisons to `activeView === "editor"`. The `activeView` type changes from `"code" | "preview"` to `"editor" | "preview"`.

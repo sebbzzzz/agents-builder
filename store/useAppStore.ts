@@ -9,7 +9,7 @@ export const useAppStore = create<AppStore>()((set) => ({
   activeCategory: null,
   selections: {},
   markdownOutput: "",
-  activeView: "code",
+  activeView: "editor",
   isDirty: false,
 
   // ── Actions ───────────────────────────────────────────────────────────────
