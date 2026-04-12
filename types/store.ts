@@ -1,19 +1,22 @@
-export interface DocumentNode {
+export interface AnchorRegion {
   id: string
-  content: string
+  from: number
+  to: number
+  contentFrom: number
+  contentTo: number
 }
 
 export interface DocumentStore {
-  nodes: DocumentNode[]
+  content: string
   isDirty: boolean
-  updateNode: (id: string, content: string) => void
-  setNodes: (nodes: DocumentNode[]) => void
+  setContent: (content: string) => void
   setIsDirty: (dirty: boolean) => void
 }
 
 export interface AppStore {
   // ── State slices ──────────────────────────────────────────────────────────
   activeCategory: string | null
+  enabledCategories: string[]
   selections: Record<string, string[]>
   markdownOutput: string
   activeView: "editor" | "preview"
@@ -21,6 +24,8 @@ export interface AppStore {
 
   // ── Actions ───────────────────────────────────────────────────────────────
   setActiveCategory: (id: string | null) => void
+  toggleCategory: (categoryId: string) => void
+  setEnabledCategories: (ids: string[]) => void
   setSelections: (selections: Record<string, string[]>) => void
   toggleSelection: (categoryId: string, optionId: string) => void
   setMarkdownOutput: (markdown: string) => void

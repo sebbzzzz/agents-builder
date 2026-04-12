@@ -3,29 +3,28 @@
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
+import { stripAnchors } from "@/lib/stripAnchors"
 import { useAppStore } from "@/store/useAppStore"
-import { assembleDocument } from "@/lib/assembleDocument"
 import { useDocumentStore } from "@/store/useDocumentStore"
 
 export function PreviewHeader() {
   const activeView = useAppStore((s) => s.activeView)
   const setActiveView = useAppStore((s) => s.setActiveView)
-  const nodes = useDocumentStore((s) => s.nodes)
+  const content = useDocumentStore((s) => s.content)
 
   const [copied, setCopied] = useState(false)
 
-  const hasContent = nodes.length > 0
+  const hasContent = content.length > 0
+  const exportContent = stripAnchors(content)
 
   function handleCopy() {
-    const content = assembleDocument(nodes)
-    navigator.clipboard.writeText(content)
+    navigator.clipboard.writeText(exportContent)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   function handleExport() {
-    const content = assembleDocument(nodes)
-    const blob = new Blob([content], { type: "text/markdown" })
+    const blob = new Blob([exportContent], { type: "text/markdown" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
@@ -76,7 +75,7 @@ export function PreviewHeader() {
           onClick={handleExport}
           className="bg-accent text-accent-foreground rounded px-3 py-1 text-xs font-medium transition-opacity hover:opacity-90"
         >
-          Export.md
+          Export .md
         </button>
       </div>
     </div>

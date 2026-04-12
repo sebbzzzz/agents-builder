@@ -13,7 +13,13 @@ export function PreviewPanel() {
     <>
       <PreviewHeader />
       <div className="min-h-0 flex-1">
-        {activeView === "editor" ? <EditorView /> : <RenderedView />}
+        {/* Both views stay mounted so the CodeMirror instance is never destroyed */}
+        <div className={activeView === "editor" ? "h-full" : "hidden"}>
+          <EditorView />
+        </div>
+        <div className={activeView === "preview" ? "h-full" : "hidden"}>
+          <RenderedView />
+        </div>
       </div>
     </>
   )

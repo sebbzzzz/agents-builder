@@ -7,6 +7,7 @@ import type { AppStore } from "@/types/store"
 export const useAppStore = create<AppStore>()((set) => ({
   // ── Initial state ─────────────────────────────────────────────────────────
   activeCategory: null,
+  enabledCategories: [],
   selections: {},
   markdownOutput: "",
   activeView: "editor",
@@ -14,6 +15,18 @@ export const useAppStore = create<AppStore>()((set) => ({
 
   // ── Actions ───────────────────────────────────────────────────────────────
   setActiveCategory: (id) => set({ activeCategory: id }),
+
+  toggleCategory: (categoryId) =>
+    set((state) => {
+      const enabled = state.enabledCategories.includes(categoryId)
+      return {
+        enabledCategories: enabled
+          ? state.enabledCategories.filter((id) => id !== categoryId)
+          : [...state.enabledCategories, categoryId],
+      }
+    }),
+
+  setEnabledCategories: (ids) => set({ enabledCategories: ids }),
 
   setSelections: (selections) => set({ selections }),
 
