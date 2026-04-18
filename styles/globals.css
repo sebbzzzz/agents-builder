@@ -5,17 +5,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
 
-  /* Design system tokens */
+  /* Design system tokens → Tailwind utilities */
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-foreground: var(--foreground);
+  --color-foreground-2: var(--foreground-2);
+  --color-foreground-4: var(--foreground-4);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ghost: var(--accent-ghost);
+  --color-accent-faint: var(--accent-faint);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-card: var(--card);
@@ -28,50 +35,68 @@
   --color-destructive: var(--destructive);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+
+  /* Radius scale — use these, not arbitrary rounded-[Xpx] */
+  --radius-none: 0px;
+  --radius-sm:   2px;   /* inputs, checkboxes, select triggers */
+  --radius-md:   4px;   /* cards, panels, chips */
+  --radius-lg:   var(--radius);
+  --radius-xl:   calc(var(--radius) * 1.4);
+
+  /* Font-size scale — use these, not arbitrary text-[Xpx] */
+  --text-meta:    9px;    /* badges, pill labels  */
+  --text-label:   10px;   /* eyebrow, owner·installs, mono secondary */
+  --text-caption: 11px;   /* tradeoff / hint text */
+  --text-option:  12.5px; /* option/skill row names */
+  --text-trigger: 12px;   /* trigger input text */
 }
 
-/* ── Dark-first design system: black / white / orange ─────────────────── */
+/* ── groundwork design system — warm dark + orange ─────────────────────── */
 :root {
-  /* Backgrounds */
-  --background: oklch(0.07 0 0); /* #0a0a0a — near-black page bg */
-  --surface: oklch(0.11 0 0); /* #141414 — panel / card bg */
-  --card: oklch(0.11 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.13 0 0);
-  --popover-foreground: oklch(0.97 0 0);
+  /* Backgrounds — warm near-blacks */
+  --background: oklch(0.16 0.008 60);
+  --surface: oklch(0.19 0.008 60);
+  --card: oklch(0.19 0.008 60);
+  --card-foreground: oklch(0.95 0.006 80);
+  --popover: oklch(0.22 0.008 60);
+  --popover-foreground: oklch(0.95 0.006 80);
+  --secondary: oklch(0.22 0.008 60);
+  --secondary-foreground: oklch(0.95 0.006 80);
+  --muted: oklch(0.22 0.008 60);
 
-  /* Text */
-  --foreground: oklch(0.97 0 0); /* #fafafa — primary text */
-  --muted-foreground: oklch(0.52 0 0); /* #737373 — muted text */
+  /* Rules / borders */
+  --border: oklch(0.3 0.008 60);
+  --border-strong: oklch(0.38 0.008 60);
+  --input: oklch(0.3 0.008 60);
 
-  /* Borders & inputs */
-  --border: oklch(0.2 0 0); /* #262626 — subtle borders */
-  --input: oklch(0.2 0 0);
-  --ring: oklch(0.705 0.213 47.604); /* orange ring */
+  /* Text — 4-step ink scale */
+  --foreground: oklch(0.95 0.006 80);
+  --foreground-2: oklch(0.78 0.008 70);
+  --foreground-4: oklch(0.44 0.008 70);
+  --muted-foreground: oklch(0.58 0.008 70);
 
-  /* Orange accent — all actions and highlights */
-  --accent: oklch(0.705 0.213 47.604); /* orange-500 #f97316 */
-  --accent-foreground: oklch(0.97 0 0);
+  /* Orange accent */
+  --accent: #ff781d;
+  --accent-2: #ff9145;
+  --accent-ghost: rgb(255 120 29 / 0.14);
+  --accent-faint: rgb(255 120 29 / 0.06);
+  --accent-foreground: oklch(0.95 0.006 80);
 
-  /* Primary maps to orange (buttons, links) */
-  --primary: oklch(0.705 0.213 47.604);
-  --primary-foreground: oklch(0.97 0 0);
+  /* Primary = accent */
+  --primary: #ff781d;
+  --primary-foreground: #1a0e05;
 
-  /* Secondary is a subtle dark surface */
-  --secondary: oklch(0.17 0 0);
-  --secondary-foreground: oklch(0.97 0 0);
+  /* Gradient — reserved for primary CTAs only, not a Tailwind color */
+  --accent-grad: linear-gradient(135deg, #ffb067 0%, #ff781d 100%);
+  --accent-grad-hover: linear-gradient(135deg, #ffc184 0%, #ff8a3a 100%);
 
-  /* Muted backgrounds */
-  --muted: oklch(0.17 0 0);
+  /* Focus ring */
+  --ring: #ff781d;
 
   /* Destructive */
   --destructive: oklch(0.577 0.245 27.325);
 
-  --radius: 0.5rem;
+  --radius: 0.375rem;
 }
 
 @layer base {
@@ -79,9 +104,23 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  /* Primary CTA — gradient only here */
+  .btn-primary {
+    background: var(--accent-grad);
+    border: none;
+    color: #1a0e05;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: var(--accent-grad-hover);
   }
 }

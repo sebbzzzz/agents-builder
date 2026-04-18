@@ -1,110 +1,173 @@
 "use client"
 
 import type { SubCategory } from "@/data/categories"
-import { cn } from "@/lib/utils"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { SELECT_THRESHOLD } from "@/lib/constants"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { OptionRow } from "@/components/common/OptionRow"
+import { SkillRow } from "@/components/category/SkillRow"
+import { TriggerCard } from "@/components/category/TriggerCard"
 
 interface SubCategoryInputsProps {
   subCategory: SubCategory
   selected: string[]
+  isEnabled: boolean
+  onEnabledChange: (enabled: boolean) => void
   onToggle: (optionId: string) => void
   onSelect: (value: string) => void
+  selectedSkillIds?: string[]
+  skillTriggers?: Record<string, string>
+  onTriggerChange?: (skillId: string, phrase: string) => void
 }
 
 export function SubCategoryInputs({
   subCategory,
   selected,
+  isEnabled,
+  onEnabledChange,
   onToggle,
   onSelect,
+  selectedSkillIds = [],
+  skillTriggers = {},
+  onTriggerChange,
 }: SubCategoryInputsProps) {
   const { type, options, label } = subCategory
 
   return (
     <TooltipProvider>
       <div className="mb-5">
-        <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wider uppercase">
-          {label}
-        </p>
-
-        {type === "multi" && (
-          <ul className="space-y-1.5">
-            {options.map((opt) => {
-              const checked = selected.includes(opt.id)
-              return (
-                <li key={opt.id}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <label className="flex cursor-pointer items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => onToggle(opt.id)}
-                          className="accent-accent h-3.5 w-3.5 flex-shrink-0 cursor-pointer rounded"
-                        />
-                        <span
-                          className={cn(
-                            "text-xs transition-colors",
-                            checked ? "text-foreground" : "text-muted-foreground",
-                          )}
-                        >
-                          {opt.label}
-                        </span>
-                      </label>
-                    </TooltipTrigger>
-                    {opt.tooltip && <TooltipContent>{opt.tooltip}</TooltipContent>}
-                  </Tooltip>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-
-        {type === "select" && (
-          <ul className="space-y-1.5">
-            {options.map((opt) => {
-              const isSelected = selected.includes(opt.id)
-              return (
-                <li key={opt.id}>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <label className="flex cursor-pointer items-center gap-2">
-                        <input
-                          type="radio"
-                          name={subCategory.id}
-                          checked={isSelected}
-                          onChange={() => onSelect(opt.id)}
-                          className="accent-accent h-3.5 w-3.5 flex-shrink-0 cursor-pointer"
-                        />
-                        <span
-                          className={cn(
-                            "text-xs transition-colors",
-                            isSelected ? "text-foreground" : "text-muted-foreground",
-                          )}
-                        >
-                          {opt.label}
-                        </span>
-                      </label>
-                    </TooltipTrigger>
-                    {opt.tooltip && <TooltipContent>{opt.tooltip}</TooltipContent>}
-                  </Tooltip>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-
-        {type === "input" && options[0] && (
-          <input
-            type="text"
-            value={selected[0] ?? ""}
-            onChange={(e) => onSelect(e.target.value)}
-            placeholder={options[0].placeholder ?? options[0].label}
-            className="border-border bg-surface text-foreground placeholder:text-muted-foreground w-full rounded-md border px-3 py-1.5 text-xs outline-none focus:ring-1 focus:ring-current"
+        {/* Header */}
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
+            {label}
+          </p>
+          <Switch
+            checked={isEnabled}
+            onCheckedChange={onEnabledChange}
+            aria-label={`Enable ${label}`}
           />
-        )}
+        </div>
 
-        {(type === "skills" || type === "triggers") && (
-          <p className="text-muted-foreground text-xs italic">Coming soon</p>
+        {isEnabled && (
+          <>
+            {/* ── multi ─────────────────────────────────────────── */}
+            {type === "multi" && (
+              <ul className="space-y-1.5">
+                {options.map((opt) => (
+                  <li key={opt.id}>
+                    <OptionRow
+                      label={opt.label}
+                      tooltip={opt.tooltip}
+                      checked={selected.includes(opt.id)}
+                      control={
+                        <Checkbox
+                          checked={selected.includes(opt.id)}
+                          onCheckedChange={() => onToggle(opt.id)}
+                        />
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* ── select (radio — few options) ──────────────────── */}
+            {type === "select" && options.length < SELECT_THRESHOLD && (
+              <RadioGroup
+                value={selected[0] ?? ""}
+                onValueChange={onSelect}
+                className="space-y-1.5"
+              >
+                {options.map((opt) => (
+                  <OptionRow
+                    key={opt.id}
+                    label={opt.label}
+                    tooltip={opt.tooltip}
+                    checked={selected.includes(opt.id)}
+                    control={<RadioGroupItem value={opt.id} />}
+                  />
+                ))}
+              </RadioGroup>
+            )}
+
+            {/* ── select (dropdown — many options) ─────────────── */}
+            {type === "select" && options.length >= SELECT_THRESHOLD && (
+              <Select
+                value={selected[0] ?? ""}
+                onValueChange={(value) => {
+                  if (value !== null) onSelect(value)
+                }}
+              >
+                <SelectTrigger className="w-full text-xs">
+                  <SelectValue placeholder="Select an option…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {options.map((opt) => (
+                    <SelectItem key={opt.id} value={opt.id} className="text-xs">
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {/* ── input ─────────────────────────────────────────── */}
+            {type === "input" && options[0] && (
+              <Input
+                value={selected[0] ?? ""}
+                onChange={(e) => onSelect(e.target.value)}
+                placeholder={options[0].placeholder ?? options[0].label}
+                className="h-8 text-xs"
+              />
+            )}
+
+            {/* ── skills ────────────────────────────────────────── */}
+            {type === "skills" && (
+              <ul className="space-y-0.5">
+                {options.map((opt) => (
+                  <li key={opt.id}>
+                    <SkillRow
+                      option={opt}
+                      checked={selected.includes(opt.id)}
+                      onToggle={() => onToggle(opt.id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* ── triggers ──────────────────────────────────────── */}
+            {type === "triggers" && (
+              <>
+                {selectedSkillIds.length === 0 ? (
+                  <div className="border-border rounded-md border border-dashed px-3 py-4 text-center">
+                    <p className="text-muted-foreground text-xs">
+                      Pick skills in the Skills section first.
+                    </p>
+                  </div>
+                ) : (
+                  selectedSkillIds.map((skillId) => (
+                    <TriggerCard
+                      key={skillId}
+                      skillId={skillId}
+                      phrase={skillTriggers[skillId] ?? ""}
+                      onPhraseChange={(phrase) => onTriggerChange?.(skillId, phrase)}
+                    />
+                  ))
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
     </TooltipProvider>

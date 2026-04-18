@@ -7,22 +7,49 @@ import { CATEGORIES } from "@/data/categories"
  *  - "select" / "multi" → array of selected option IDs
  *  - "input"            → single-element array containing the raw text value
  *  - "skills"           → array of selected skill IDs (install commands emitted)
- *  - "triggers"         → not yet implemented; skipped
+ *  - "triggers"         → keyed by skill ID in skillTriggers; emits auto-invoke lines
  */
-export function buildAgentsFile(selections: Record<string, string[]>): string {
+export function buildAgentsFile(
+  selections: Record<string, string[]>,
+  enabledSubCategories: Record<string, boolean> = {},
+  skillTriggers: Record<string, string> = {},
+): string {
   const sections: string[] = []
+  const skillInstalls: string[] = []
+  const triggerLines: string[] = []
 
   for (const category of CATEGORIES) {
     const categoryLines: string[] = []
 
     for (const sub of category.subCategories) {
+      if (enabledSubCategories[sub.id] === false) continue
+
       const selected = selections[sub.id]
+
+      if (sub.type === "skills") {
+        if (!selected || selected.length === 0) continue
+        const installs = sub.options
+          .filter((opt) => selected.includes(opt.id))
+          .map((opt) => opt.prompt)
+        skillInstalls.push(...installs)
+        continue
+      }
+
+      if (sub.type === "triggers") {
+        // Collect non-empty trigger phrases
+        for (const [skillId, phrase] of Object.entries(skillTriggers)) {
+          if (phrase.trim()) {
+            triggerLines.push(`- Use \`${skillId}\` ${phrase.trim()}`)
+          }
+        }
+        continue
+      }
+
       if (!selected || selected.length === 0) continue
 
       if (sub.type === "input") {
         const value = selected[0]?.trim()
         if (value) {
-          // Use the first option's prompt as a prefix template if available
           const prefixOption = sub.options[0]
           if (prefixOption?.prompt) {
             categoryLines.push(`${prefixOption.prompt} ${value}`)
@@ -30,21 +57,6 @@ export function buildAgentsFile(selections: Record<string, string[]>): string {
             categoryLines.push(value)
           }
         }
-        continue
-      }
-
-      if (sub.type === "skills") {
-        const installs = sub.options
-          .filter((opt) => selected.includes(opt.id))
-          .map((opt) => opt.prompt)
-        if (installs.length > 0) {
-          categoryLines.push(...installs)
-        }
-        continue
-      }
-
-      if (sub.type === "triggers") {
-        // Not yet implemented
         continue
       }
 
@@ -60,6 +72,17 @@ export function buildAgentsFile(selections: Record<string, string[]>): string {
     if (categoryLines.length > 0) {
       sections.push(`## ${category.label}\n\n${categoryLines.join("\n\n")}`)
     }
+  }
+
+  // Skills block
+  if (skillInstalls.length > 0) {
+    sections.push(`## Available Skills\n\n\`\`\`bash\n${skillInstalls.join("\n")}\n\`\`\``)
+  }
+
+  // Auto-invoke block — deduplicate trigger lines (triggers may be iterated per sub-category)
+  const uniqueTriggerLines = [...new Set(triggerLines)]
+  if (uniqueTriggerLines.length > 0) {
+    sections.push(`## Auto-invoke Skills\n\n${uniqueTriggerLines.join("\n")}`)
   }
 
   return sections.join("\n\n---\n\n")
