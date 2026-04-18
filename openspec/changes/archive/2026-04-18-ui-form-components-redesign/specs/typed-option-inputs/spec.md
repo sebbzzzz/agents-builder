@@ -1,9 +1,5 @@
-# Spec: typed-option-inputs
+## MODIFIED Requirements
 
-## Purpose
-
-TBD — defines how each sub-category type (`multi`, `select`, `input`, `visibleWhen`) is rendered as a distinct input control within the checklist area, and how tooltips are displayed for individual options.
-## Requirements
 ### Requirement: `multi` sub-category renders a checkbox list
 The system SHALL render a shadcn `Checkbox` component (from `@/components/ui/checkbox`) for each option in a `SubCategory` whose `type` is `"multi"`, via the reusable `OptionRow` component.
 
@@ -16,7 +12,7 @@ The system SHALL render a shadcn `Checkbox` component (from `@/components/ui/che
 - **THEN** that option's ID is removed from the selection
 
 ### Requirement: `select` sub-category renders a single-choice control
-The system SHALL render a shadcn `RadioGroup` for a `SubCategory` of type `"select"` with fewer than 5 options, and a shadcn `Select` dropdown when the option count is 5 or more. All options use the shared `OptionRow` component for consistent layout.
+The system SHALL render a shadcn `RadioGroup` for a `SubCategory` of type `"select"` with fewer than 5 options, and a shadcn `Select` dropdown when the option count is 5 or more, via the reusable `OptionRow` component.
 
 #### Scenario: Selecting a new option deselects the previous one
 - **WHEN** the user selects option B in a `select` sub-category that already has option A selected
@@ -67,6 +63,8 @@ The system SHALL display the option's `tooltip` text in a tooltip when the user 
 - **WHEN** an option has no `tooltip` property
 - **THEN** no tooltip UI element is rendered for that option
 
+## ADDED Requirements
+
 ### Requirement: Each sub-category has a Switch to enable or disable it
 The system SHALL render a shadcn `Switch` at the top of each sub-category block. When off, the sub-category's options are hidden and excluded from output.
 
@@ -87,13 +85,13 @@ The system SHALL render a shadcn `Switch` at the top of each sub-category block.
 - **THEN** none of that sub-category's options appear in the generated AGENTS.md preview
 
 ### Requirement: `skills` sub-category renders a checklist of skill rows
-The system SHALL render a `SkillRow` for each option in a `SubCategory` of `type: "skills"`, replacing the previous "Coming soon" placeholder. Each row shows the skill name and secondary metadata (owner · installs).
+The system SHALL render a `SkillRow` for each option in a `SubCategory` of type `"skills"`, replacing the previous "Coming soon" placeholder.
 
 #### Scenario: Skills type no longer shows "Coming soon"
 - **WHEN** a sub-category of type `"skills"` is rendered
 - **THEN** a structured row per option is displayed, not a placeholder message
 
-#### Scenario: Multiple skills can be selected simultaneously
+#### Scenario: Multiple skills can be selected
 - **WHEN** the user checks multiple skill rows
 - **THEN** all selected IDs appear in the sub-category's selection array
 
@@ -103,4 +101,3 @@ The system SHALL render a `TriggerCard` for each skill currently selected, repla
 #### Scenario: Triggers type no longer shows "Coming soon"
 - **WHEN** a sub-category of type `"triggers"` is rendered
 - **THEN** trigger cards (or an empty-state tile) are displayed, not a placeholder message
-

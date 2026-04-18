@@ -28,6 +28,10 @@ export interface Option {
   placeholder?: string
   /** Tags used to match skills to the active tech stack */
   tags?: string[]
+  /** Skill author/owner — used for skills sub-category rows */
+  owner?: string
+  /** Formatted install count string e.g. "261.1K" — used for skills sub-category rows */
+  installs?: string
 }
 
 export interface SubCategory {
@@ -434,6 +438,8 @@ export const CATEGORIES: Category[] = [
             label: "find-skills",
             tooltip: "Helps agents discover other skills",
             tags: ["meta"],
+            owner: "vercel-labs",
+            installs: "184.2K",
             prompt: "npx skills add vercel-labs/agent-skills/find-skills",
           },
           {
@@ -441,6 +447,8 @@ export const CATEGORIES: Category[] = [
             label: "vercel-react-best-practices",
             tooltip: "React patterns from Vercel",
             tags: ["frontend", "react"],
+            owner: "vercel-labs",
+            installs: "261.1K",
             prompt: "npx skills add vercel-labs/agent-skills/vercel-react-best-practices",
           },
           {
@@ -448,6 +456,8 @@ export const CATEGORIES: Category[] = [
             label: "frontend-design",
             tooltip: "Production-grade UI design guidelines",
             tags: ["frontend"],
+            owner: "anthropics",
+            installs: "198.4K",
             prompt: "npx skills add anthropics/skills/frontend-design",
           },
           {
@@ -455,6 +465,8 @@ export const CATEGORIES: Category[] = [
             label: "web-design-guidelines",
             tooltip: "Web design principles from Vercel",
             tags: ["frontend"],
+            owner: "vercel-labs",
+            installs: "142.7K",
             prompt: "npx skills add vercel-labs/agent-skills/web-design-guidelines",
           },
           {
@@ -462,6 +474,8 @@ export const CATEGORIES: Category[] = [
             label: "remotion-best-practices",
             tooltip: "Video rendering with Remotion",
             tags: ["frontend"],
+            owner: "remotion-dev",
+            installs: "38.9K",
             prompt: "npx skills add remotion-dev/remotion-skills/remotion-best-practices",
           },
           {
@@ -469,6 +483,8 @@ export const CATEGORIES: Category[] = [
             label: "shadcn",
             tooltip: "shadcn/ui component patterns",
             tags: ["ui", "frontend"],
+            owner: "shadcn",
+            installs: "92.2K",
             prompt: "npx skills add shadcn/ui/shadcn",
           },
           {
@@ -476,6 +492,8 @@ export const CATEGORIES: Category[] = [
             label: "next-best-practices",
             tooltip: "Next.js patterns from Vercel",
             tags: ["frontend", "nextjs"],
+            owner: "vercel-labs",
+            installs: "219.5K",
             prompt: "npx skills add vercel-labs/agent-skills/next-best-practices",
           },
           {
@@ -483,6 +501,8 @@ export const CATEGORIES: Category[] = [
             label: "supabase-postgres-best-practices",
             tooltip: "Supabase + Postgres patterns",
             tags: ["database"],
+            owner: "supabase",
+            installs: "74.1K",
             prompt: "npx skills add supabase/skills/supabase-postgres-best-practices",
           },
           {
@@ -490,6 +510,8 @@ export const CATEGORIES: Category[] = [
             label: "better-auth-best-practices",
             tooltip: "Auth patterns with better-auth",
             tags: ["auth"],
+            owner: "better-auth",
+            installs: "31.6K",
             prompt: "npx skills add better-auth/skills/better-auth-best-practices",
           },
           {
@@ -497,6 +519,8 @@ export const CATEGORIES: Category[] = [
             label: "playwright-best-practices",
             tooltip: "E2E testing with Playwright",
             tags: ["testing"],
+            owner: "currents-dev",
+            installs: "55.3K",
             prompt:
               "npx skills add currents-dev/playwright-best-practices-skill/playwright-best-practices",
           },
@@ -505,6 +529,8 @@ export const CATEGORIES: Category[] = [
             label: "systematic-debugging",
             tooltip: "Structured approach to debugging",
             tags: ["workflow"],
+            owner: "obra",
+            installs: "27.8K",
             prompt: "npx skills add obra/skills/systematic-debugging",
           },
           {
@@ -512,6 +538,8 @@ export const CATEGORIES: Category[] = [
             label: "test-driven-development",
             tooltip: "TDD workflow and patterns",
             tags: ["testing", "workflow"],
+            owner: "obra",
+            installs: "43.2K",
             prompt: "npx skills add obra/skills/test-driven-development",
           },
           {
@@ -519,6 +547,8 @@ export const CATEGORIES: Category[] = [
             label: "requesting-code-review",
             tooltip: "How to prepare and request PR reviews",
             tags: ["workflow"],
+            owner: "obra",
+            installs: "19.4K",
             prompt: "npx skills add obra/skills/requesting-code-review",
           },
           {
@@ -526,6 +556,8 @@ export const CATEGORIES: Category[] = [
             label: "typescript-advanced-types",
             tooltip: "Advanced TypeScript type patterns",
             tags: ["language", "typescript"],
+            owner: "wshobson",
+            installs: "88.6K",
             prompt: "npx skills add wshobson/skills/typescript-advanced-types",
           },
           {
@@ -533,6 +565,8 @@ export const CATEGORIES: Category[] = [
             label: "api-design-principles",
             tooltip: "REST API design guidelines",
             tags: ["backend"],
+            owner: "wshobson",
+            installs: "61.2K",
             prompt: "npx skills add wshobson/skills/api-design-principles",
           },
           {
@@ -540,6 +574,8 @@ export const CATEGORIES: Category[] = [
             label: "nodejs-backend-patterns",
             tooltip: "Node.js backend architecture patterns",
             tags: ["backend"],
+            owner: "wshobson",
+            installs: "49.7K",
             prompt: "npx skills add wshobson/skills/nodejs-backend-patterns",
           },
           {
@@ -547,6 +583,8 @@ export const CATEGORIES: Category[] = [
             label: "python-performance-optimization",
             tooltip: "Python performance tips",
             tags: ["backend", "python"],
+            owner: "wshobson",
+            installs: "34.1K",
             prompt: "npx skills add wshobson/skills/python-performance-optimization",
           },
           {
@@ -554,6 +592,8 @@ export const CATEGORIES: Category[] = [
             label: "tailwind-design-system",
             tooltip: "Tailwind CSS design system guidelines",
             tags: ["frontend", "css"],
+            owner: "wshobson",
+            installs: "78.3K",
             prompt: "npx skills add wshobson/skills/tailwind-design-system",
           },
           {
@@ -561,6 +601,8 @@ export const CATEGORIES: Category[] = [
             label: "turborepo",
             tooltip: "Monorepo management with Turborepo",
             tags: ["tooling", "monorepo"],
+            owner: "vercel",
+            installs: "112.9K",
             prompt: "npx skills add vercel/skills/turborepo",
           },
           {
@@ -568,6 +610,8 @@ export const CATEGORIES: Category[] = [
             label: "ai-sdk",
             tooltip: "Vercel AI SDK patterns",
             tags: ["ai", "frontend"],
+            owner: "vercel",
+            installs: "95.4K",
             prompt: "npx skills add vercel/skills/ai-sdk",
           },
           {
@@ -575,6 +619,8 @@ export const CATEGORIES: Category[] = [
             label: "vue-best-practices",
             tooltip: "Vue 3 patterns and conventions",
             tags: ["frontend", "vue"],
+            owner: "hyf0",
+            installs: "22.1K",
             prompt: "npx skills add hyf0/skills/vue-best-practices",
           },
           {
@@ -582,6 +628,8 @@ export const CATEGORIES: Category[] = [
             label: "security-best-practices",
             tooltip: "Security guidelines for web apps",
             tags: ["security"],
+            owner: "supercent-io",
+            installs: "41.8K",
             prompt: "npx skills add supercent-io/skills/security-best-practices",
           },
           {
@@ -589,6 +637,8 @@ export const CATEGORIES: Category[] = [
             label: "web-accessibility",
             tooltip: "WCAG and accessibility patterns",
             tags: ["accessibility", "frontend"],
+            owner: "supercent-io",
+            installs: "29.5K",
             prompt: "npx skills add supercent-io/skills/web-accessibility",
           },
           {
@@ -596,6 +646,8 @@ export const CATEGORIES: Category[] = [
             label: "mcp-builder",
             tooltip: "Build MCP servers and tools",
             tags: ["ai", "meta"],
+            owner: "anthropics",
+            installs: "67.3K",
             prompt: "npx skills add anthropics/skills/mcp-builder",
           },
           {
@@ -603,6 +655,8 @@ export const CATEGORIES: Category[] = [
             label: "skill-creator",
             tooltip: "Create and publish new skills",
             tags: ["meta"],
+            owner: "anthropics",
+            installs: "15.8K",
             prompt: "npx skills add anthropics/skills/skill-creator",
           },
           {
@@ -610,6 +664,8 @@ export const CATEGORIES: Category[] = [
             label: "webapp-testing",
             tooltip: "Web app testing strategies",
             tags: ["testing"],
+            owner: "anthropics",
+            installs: "53.7K",
             prompt: "npx skills add anthropics/skills/webapp-testing",
           },
         ],
