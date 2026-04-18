@@ -3,26 +3,28 @@
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
+import { stripAnchors } from "@/lib/stripAnchors"
 import { useAppStore } from "@/store/useAppStore"
-
-const PLACEHOLDER = "# AGENTS.md\n\nSelect options from the left to build your AGENTS.md"
+import { useDocumentStore } from "@/store/useDocumentStore"
 
 export function PreviewHeader() {
   const activeView = useAppStore((s) => s.activeView)
-  const markdownOutput = useAppStore((s) => s.markdownOutput)
   const setActiveView = useAppStore((s) => s.setActiveView)
+  const content = useDocumentStore((s) => s.content)
 
   const [copied, setCopied] = useState(false)
 
+  const hasContent = content.length > 0
+  const exportContent = stripAnchors(content)
+
   function handleCopy() {
-    navigator.clipboard.writeText(markdownOutput || PLACEHOLDER)
+    navigator.clipboard.writeText(exportContent)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   function handleExport() {
-    const content = markdownOutput || PLACEHOLDER
-    const blob = new Blob([content], { type: "text/markdown" })
+    const blob = new Blob([exportContent], { type: "text/markdown" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
@@ -36,15 +38,15 @@ export function PreviewHeader() {
       {/* View toggle */}
       <div className="border-border flex rounded-md border p-0.5">
         <button
-          onClick={() => setActiveView("code")}
+          onClick={() => setActiveView("editor")}
           className={cn(
             "rounded px-3 py-1 text-xs font-medium transition-colors",
-            activeView === "code"
+            activeView === "editor"
               ? "bg-accent text-accent-foreground"
               : "text-muted-foreground hover:text-foreground",
           )}
         >
-          Code
+          Editor
         </button>
         <button
           onClick={() => setActiveView("preview")}
@@ -62,12 +64,14 @@ export function PreviewHeader() {
       {/* Action buttons */}
       <div className="flex items-center gap-2">
         <button
+          disabled={!hasContent}
           onClick={handleCopy}
           className="border-border text-muted-foreground hover:border-accent hover:text-accent rounded border px-3 py-1 text-xs transition-colors"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
         <button
+          disabled={!hasContent}
           onClick={handleExport}
           className="bg-accent text-accent-foreground rounded px-3 py-1 text-xs font-medium transition-opacity hover:opacity-90"
         >

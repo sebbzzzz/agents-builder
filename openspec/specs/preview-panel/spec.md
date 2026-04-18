@@ -2,42 +2,53 @@
 
 ## Purpose
 
-TBD — defines the right-column panel that displays the assembled markdown output in code or rendered preview modes, with copy and export actions.
+TBD — defines the right-column panel that displays the assembled markdown output in editor or rendered preview modes, with copy and export actions.
 
 ## Requirements
 
 ### Requirement: Preview panel header is sticky with view toggle and action buttons
-The system SHALL render a sticky header at the top of the right column containing a Code / Preview toggle and Copy and Export buttons.
+The system SHALL render a sticky header at the top of the right column containing an Editor / Preview toggle and Copy and Export buttons.
 
 #### Scenario: Header is always visible
 - **WHEN** the user scrolls the preview content
 - **THEN** the header with toggle and buttons remains pinned at the top of the right column
 
-#### Scenario: Toggle shows two options
+### Requirement: Preview panel header view toggle shows "Editor" and "Preview" options
+The system SHALL render a sticky header with a toggle containing two options: "Editor" and "Preview" (replacing the previous "Code" and "Preview" options).
+
+#### Scenario: Toggle shows Editor and Preview options
 - **WHEN** the preview panel header renders
-- **THEN** two toggle options are visible: "Code" and "Preview"
+- **THEN** two toggle options are visible: "Editor" and "Preview"
 
-### Requirement: Code view renders raw markdown in a monospace editor-style area
-The system SHALL display the current `markdownOutput` string from the Zustand store as plain text in a `<pre>` or code-editor-styled container when the active view is "code".
+#### Scenario: Editor is the default active view
+- **WHEN** the app first loads
+- **THEN** the "Editor" option is active and the editor surface is displayed
 
-#### Scenario: Raw markdown is visible in Code view
-- **WHEN** the active view is "code" and `markdownOutput` is non-empty
-- **THEN** the raw markdown text is displayed verbatim in a monospace font
+### Requirement: Editor view renders a CodeMirror 6 markdown editor
+The system SHALL display a CodeMirror 6 editor instance when `activeView === "editor"`. The editor SHALL be initialised with the assembled content of `useDocumentStore.nodes` and remain uncontrolled (not re-initialised on every render).
 
-#### Scenario: Code view shows empty state when markdown is empty
-- **WHEN** the active view is "code" and `markdownOutput` is an empty string
-- **THEN** the panel displays a placeholder message (e.g., "Select options from the left to build your AGENTS.md")
+#### Scenario: Editor surface is displayed in Editor view
+- **WHEN** the active view is "editor"
+- **THEN** a CodeMirror editor is rendered and accepts user input
 
-### Requirement: Preview view renders markdown as formatted HTML
-The system SHALL render `markdownOutput` as formatted HTML using `react-markdown` when the active view is "preview".
+#### Scenario: Editor is initialised from the document node array
+- **WHEN** the EditorView mounts
+- **THEN** the initial editor content equals `nodes.map(n => n.content).join('\n\n')`
 
-#### Scenario: Headings render as HTML heading elements
-- **WHEN** the active view is "preview" and the markdown contains `## Section`
-- **THEN** that text renders as an `<h2>` element with appropriate styling
+#### Scenario: Editor displays empty state when no nodes exist
+- **WHEN** `activeView === "editor"` and the node array is empty
+- **THEN** a placeholder message is displayed (e.g., "Select options from the left to start your AGENTS.md")
 
-#### Scenario: Preview view shows empty state when markdown is empty
-- **WHEN** the active view is "preview" and `markdownOutput` is an empty string
-- **THEN** the panel displays the same placeholder message as the code view
+### Requirement: Preview view renders the assembled markdown as formatted HTML
+The system SHALL render the assembled `nodes.map(n => n.content).join('\n\n')` using `react-markdown` when `activeView === "preview"`.
+
+#### Scenario: Assembled markdown is rendered in Preview view
+- **WHEN** the active view is "preview" and nodes are non-empty
+- **THEN** the assembled markdown is rendered as formatted HTML
+
+#### Scenario: Preview view shows an empty state when nodes are empty
+- **WHEN** the active view is "preview" and the node array is empty
+- **THEN** the placeholder message is displayed
 
 ### Requirement: Copy button copies markdown to clipboard
 The system SHALL copy the current `markdownOutput` string to the system clipboard when the user clicks Copy.
@@ -54,8 +65,8 @@ The system SHALL trigger a browser file download of `markdownOutput` as `AGENTS.
 - **THEN** the browser initiates a download of a file named `AGENTS.md` containing the current `markdownOutput`
 
 ### Requirement: Switching views preserves scroll position within each view
-The system SHALL maintain independent scroll positions for the Code and Preview views so switching between them does not reset the user's reading position.
+The system SHALL maintain independent scroll positions for the Editor and Preview views so switching between them does not reset the user's reading position.
 
 #### Scenario: Scroll position is preserved on view switch
-- **WHEN** the user scrolls down in Code view and then switches to Preview view and back
-- **THEN** the Code view restores to the same scroll position it was at before switching
+- **WHEN** the user scrolls down in Editor view and then switches to Preview view and back
+- **THEN** the Editor view restores to the same scroll position it was at before switching
