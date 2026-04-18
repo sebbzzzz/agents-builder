@@ -8,6 +8,8 @@ export const useAppStore = create<AppStore>()((set) => ({
   // ── Initial state ─────────────────────────────────────────────────────────
   activeCategory: null,
   enabledCategories: [],
+  enabledSubCategories: {},
+  skillTriggers: {},
   selections: {},
   markdownOutput: "",
   activeView: "editor",
@@ -15,6 +17,13 @@ export const useAppStore = create<AppStore>()((set) => ({
 
   // ── Actions ───────────────────────────────────────────────────────────────
   setActiveCategory: (id) => set({ activeCategory: id }),
+
+  clearActiveCategory: () => set({ activeCategory: null }),
+
+  setSubCategoryEnabled: (subCategoryId, enabled) =>
+    set((state) => ({
+      enabledSubCategories: { ...state.enabledSubCategories, [subCategoryId]: enabled },
+    })),
 
   toggleCategory: (categoryId) =>
     set((state) => {
@@ -28,15 +37,23 @@ export const useAppStore = create<AppStore>()((set) => ({
 
   setEnabledCategories: (ids) => set({ enabledCategories: ids }),
 
+  setSkillTrigger: (skillId, phrase) =>
+    set((state) => ({
+      skillTriggers: { ...state.skillTriggers, [skillId]: phrase },
+    })),
+
   setSelections: (selections) => set({ selections }),
 
   toggleSelection: (subCategoryId, optionId) =>
     set((state) => {
       const current = state.selections[subCategoryId] ?? []
-      const next = current.includes(optionId)
-        ? current.filter((id) => id !== optionId)
-        : [...current, optionId]
-      return { selections: { ...state.selections, [subCategoryId]: next } }
+      const isRemoving = current.includes(optionId)
+      const next = isRemoving ? current.filter((id) => id !== optionId) : [...current, optionId]
+      // Clear trigger phrase when a skill is unchecked
+      const skillTriggers = isRemoving
+        ? { ...state.skillTriggers, [optionId]: "" }
+        : state.skillTriggers
+      return { selections: { ...state.selections, [subCategoryId]: next }, skillTriggers }
     }),
 
   setSelection: (subCategoryId, value) =>

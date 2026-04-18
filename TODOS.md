@@ -1,0 +1,3 @@
+- Implement the preset markdown fragment system as described in the specification.
+- Implement saving triggers.
+- Implement UI button common.

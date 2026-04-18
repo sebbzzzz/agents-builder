@@ -1,13 +1,44 @@
 "use client"
 
+import {
+  BookOpen,
+  Briefcase,
+  CheckCircle,
+  GitBranch,
+  Grid,
+  type LucideProps,
+  Layers,
+  Paintbrush,
+  PlayCircle,
+  ShieldOff,
+  Terminal,
+  Zap,
+} from "lucide-react"
+
 import { CATEGORIES } from "@/data/categories"
 import { cn } from "@/lib/utils"
+import { Switch } from "@/components/ui/switch"
 import { useAppStore } from "@/store/useAppStore"
+
+const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
+  Layers,
+  Briefcase,
+  Zap,
+  PlayCircle,
+  GitBranch,
+  Paintbrush,
+  BookOpen,
+  Grid,
+  ShieldOff,
+  Terminal,
+  CheckCircle,
+}
 
 export function CategoryList() {
   const activeCategory = useAppStore((s) => s.activeCategory)
   const enabledCategories = useAppStore((s) => s.enabledCategories)
   const setActiveCategory = useAppStore((s) => s.setActiveCategory)
+  const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
   const toggleCategory = useAppStore((s) => s.toggleCategory)
 
   return (
@@ -16,30 +47,47 @@ export function CategoryList() {
         {CATEGORIES.map((category) => {
           const isActive = activeCategory === category.id
           const isEnabled = enabledCategories.includes(category.id)
+          const Icon = ICON_MAP[category.icon]
+
           return (
             <li key={category.id}>
               <div
                 className={cn(
-                  "flex items-center border-l-2 transition-colors",
+                  "flex items-center gap-2.5 border-l-2 px-3 transition-colors",
                   isActive ? "border-accent bg-surface" : "hover:bg-surface border-transparent",
                 )}
               >
-                <input
-                  type="checkbox"
-                  checked={isEnabled}
-                  onChange={() => toggleCategory(category.id)}
-                  onClick={(e) => e.stopPropagation()}
-                  className="accent-accent ml-3 h-3.5 w-3.5 flex-shrink-0 cursor-pointer"
-                />
+                {/* Category icon */}
+                {Icon && (
+                  <Icon
+                    size={13}
+                    className={cn(
+                      "flex-shrink-0 transition-colors",
+                      isActive ? "text-accent" : "text-muted-foreground",
+                    )}
+                  />
+                )}
+
+                {/* Label button */}
                 <button
-                  onClick={() => setActiveCategory(category.id)}
+                  onClick={() =>
+                    isActive ? clearActiveCategory() : setActiveCategory(category.id)
+                  }
                   className={cn(
-                    "flex-1 px-3 py-2.5 text-left text-sm transition-colors",
+                    "flex-1 py-2.5 text-left text-sm transition-colors",
                     isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   {category.label}
                 </button>
+
+                {/* Enable switch — right side */}
+                <Switch
+                  checked={isEnabled}
+                  onCheckedChange={() => toggleCategory(category.id)}
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label={`Enable ${category.label}`}
+                />
               </div>
             </li>
           )
