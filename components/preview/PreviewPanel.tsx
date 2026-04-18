@@ -2,7 +2,7 @@
 
 import { useAppStore } from "@/store/useAppStore"
 
-import { CodeView } from "./CodeView"
+import { EditorView } from "./EditorView"
 import { PreviewHeader } from "./PreviewHeader"
 import { RenderedView } from "./RenderedView"
 
@@ -13,7 +13,13 @@ export function PreviewPanel() {
     <>
       <PreviewHeader />
       <div className="min-h-0 flex-1">
-        {activeView === "code" ? <CodeView /> : <RenderedView />}
+        {/* Both views stay mounted so the CodeMirror instance is never destroyed */}
+        <div className={activeView === "editor" ? "h-full" : "hidden"}>
+          <EditorView />
+        </div>
+        <div className={activeView === "preview" ? "h-full" : "hidden"}>
+          <RenderedView />
+        </div>
       </div>
     </>
   )

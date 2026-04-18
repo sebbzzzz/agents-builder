@@ -7,24 +7,42 @@ import type { AppStore } from "@/types/store"
 export const useAppStore = create<AppStore>()((set) => ({
   // ── Initial state ─────────────────────────────────────────────────────────
   activeCategory: null,
+  enabledCategories: [],
   selections: {},
   markdownOutput: "",
-  activeView: "code",
+  activeView: "editor",
   isDirty: false,
 
   // ── Actions ───────────────────────────────────────────────────────────────
   setActiveCategory: (id) => set({ activeCategory: id }),
 
+  toggleCategory: (categoryId) =>
+    set((state) => {
+      const enabled = state.enabledCategories.includes(categoryId)
+      return {
+        enabledCategories: enabled
+          ? state.enabledCategories.filter((id) => id !== categoryId)
+          : [...state.enabledCategories, categoryId],
+      }
+    }),
+
+  setEnabledCategories: (ids) => set({ enabledCategories: ids }),
+
   setSelections: (selections) => set({ selections }),
 
-  toggleSelection: (categoryId, optionId) =>
+  toggleSelection: (subCategoryId, optionId) =>
     set((state) => {
-      const current = state.selections[categoryId] ?? []
+      const current = state.selections[subCategoryId] ?? []
       const next = current.includes(optionId)
         ? current.filter((id) => id !== optionId)
         : [...current, optionId]
-      return { selections: { ...state.selections, [categoryId]: next } }
+      return { selections: { ...state.selections, [subCategoryId]: next } }
     }),
+
+  setSelection: (subCategoryId, value) =>
+    set((state) => ({
+      selections: { ...state.selections, [subCategoryId]: [value] },
+    })),
 
   setMarkdownOutput: (markdown) => set({ markdownOutput: markdown }),
 
