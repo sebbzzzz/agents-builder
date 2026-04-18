@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react"
 import type { Text } from "@codemirror/state"
 import type { EditorView as CMEditorView, ViewUpdate } from "@codemirror/view"
 
+import { CATEGORIES } from "@/data/categories"
 import { useAutoSave } from "@/hooks/useAutoSave"
 import { useFragmentSync } from "@/hooks/useFragmentSync"
 import { parseAnchors } from "@/lib/anchorParser"
@@ -42,16 +43,24 @@ export function EditorView() {
     let selectionsChanged = removedCategories.size > 0
 
     for (const catId of enabledCategories) {
+      const category = CATEGORIES.find((c) => c.id === catId)
+      if (!category) continue
+
       if (removedCategories.has(catId)) {
-        // Whole category removed — clear its selections
-        delete nextSelections[catId]
+        // Whole category removed — clear all sub-category selections
+        for (const sub of category.subCategories) {
+          delete nextSelections[sub.id]
+        }
         continue
       }
-      const selectedItems = selections[catId] ?? []
-      const remaining = selectedItems.filter((itemId) => anchorIds.has(itemId))
-      if (remaining.length !== selectedItems.length) {
-        nextSelections[catId] = remaining
-        selectionsChanged = true
+      // For each sub-category, keep only option IDs whose anchors still exist
+      for (const sub of category.subCategories) {
+        const selectedItems = selections[sub.id] ?? []
+        const remaining = selectedItems.filter((itemId) => anchorIds.has(itemId))
+        if (remaining.length !== selectedItems.length) {
+          nextSelections[sub.id] = remaining
+          selectionsChanged = true
+        }
       }
     }
 

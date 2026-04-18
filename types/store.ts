@@ -27,7 +27,8 @@ export interface AppStore {
   toggleCategory: (categoryId: string) => void
   setEnabledCategories: (ids: string[]) => void
   setSelections: (selections: Record<string, string[]>) => void
-  toggleSelection: (categoryId: string, optionId: string) => void
+  toggleSelection: (subCategoryId: string, optionId: string) => void
+  setSelection: (subCategoryId: string, value: string) => void
   setMarkdownOutput: (markdown: string) => void
   setActiveView: (view: "editor" | "preview") => void
   setIsDirty: (dirty: boolean) => void

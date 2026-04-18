@@ -2,18 +2,16 @@
 
 import { Suspense, lazy } from "react"
 
-import { stripAnchors } from "@/lib/stripAnchors"
-import { useDocumentStore } from "@/store/useDocumentStore"
+import { useAppStore } from "@/store/useAppStore"
 
 const ReactMarkdown = lazy(() => import("react-markdown"))
 
 const PLACEHOLDER = "Select options from the left to build your AGENTS.md"
 
 export function RenderedView() {
-  const content = useDocumentStore((s) => s.content)
-  const rendered = stripAnchors(content)
+  const content = useAppStore((s) => s.markdownOutput)
 
-  if (!rendered) {
+  if (!content) {
     return (
       <div className="flex h-full items-center justify-center">
         <p className="text-muted-foreground text-sm">{PLACEHOLDER}</p>
@@ -25,7 +23,7 @@ export function RenderedView() {
     <div className="h-full overflow-y-auto p-4">
       <Suspense fallback={<p className="text-muted-foreground text-sm">Loading…</p>}>
         <article className="prose prose-invert prose-sm max-w-none">
-          <ReactMarkdown>{rendered}</ReactMarkdown>
+          <ReactMarkdown>{content}</ReactMarkdown>
         </article>
       </Suspense>
     </div>

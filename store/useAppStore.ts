@@ -30,14 +30,19 @@ export const useAppStore = create<AppStore>()((set) => ({
 
   setSelections: (selections) => set({ selections }),
 
-  toggleSelection: (categoryId, optionId) =>
+  toggleSelection: (subCategoryId, optionId) =>
     set((state) => {
-      const current = state.selections[categoryId] ?? []
+      const current = state.selections[subCategoryId] ?? []
       const next = current.includes(optionId)
         ? current.filter((id) => id !== optionId)
         : [...current, optionId]
-      return { selections: { ...state.selections, [categoryId]: next } }
+      return { selections: { ...state.selections, [subCategoryId]: next } }
     }),
+
+  setSelection: (subCategoryId, value) =>
+    set((state) => ({
+      selections: { ...state.selections, [subCategoryId]: [value] },
+    })),
 
   setMarkdownOutput: (markdown) => set({ markdownOutput: markdown }),
 

@@ -28,16 +28,20 @@ The system SHALL update the active category in the Zustand store when the user c
 - **WHEN** the user clicks a second category
 - **THEN** the first category loses its active style and the second gains it
 
-### Requirement: Checklist area renders below the category list
-The system SHALL render a placeholder checklist area below the category list that displays the name of the active category and a "coming soon" or empty state message when no options are loaded.
+### Requirement: Checklist area renders sub-categories from CATEGORIES data
+The system SHALL render the active category's `subCategories` array from the `CATEGORIES` data structure, dispatching on each sub-category's `type` to render the correct input control — replacing the previous flat checkbox list sourced from the stub `OPTIONS` map.
+
+#### Scenario: Sub-categories are visible under the active category
+- **WHEN** the user clicks a category that has sub-categories
+- **THEN** each sub-category label and its corresponding input controls are rendered in the checklist area
+
+#### Scenario: Empty state is shown when no options exist
+- **WHEN** the active category has no sub-categories
+- **THEN** the checklist area displays a non-empty placeholder (e.g., "Options coming soon")
 
 #### Scenario: Active category name appears in checklist area
 - **WHEN** the user clicks a category
 - **THEN** the checklist area header updates to show that category's name
-
-#### Scenario: Empty state is shown when no options exist
-- **WHEN** the active category has no options loaded yet
-- **THEN** the checklist area displays a non-empty placeholder (e.g., "Options coming soon")
 
 ### Requirement: Left panel has a branding header
 The system SHALL render a header at the top of the left column containing the app name or logo, pinned to the top of the column.

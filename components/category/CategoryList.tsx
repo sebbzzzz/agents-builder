@@ -21,9 +21,7 @@ export function CategoryList() {
               <div
                 className={cn(
                   "flex items-center border-l-2 transition-colors",
-                  isActive
-                    ? "border-accent bg-surface"
-                    : "border-transparent hover:bg-surface",
+                  isActive ? "border-accent bg-surface" : "hover:bg-surface border-transparent",
                 )}
               >
                 <input

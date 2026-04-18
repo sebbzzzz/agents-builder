@@ -5,9 +5,13 @@ import { useEffect, useRef } from "react"
 import type { EditorView } from "@codemirror/view"
 
 import { CATEGORIES } from "@/data/categories"
-import { OPTIONS } from "@/data/options"
 import { parseAnchors } from "@/lib/anchorParser"
-import { disableFragment, disablePreset, enableFragment, enablePreset } from "@/lib/fragmentApplicator"
+import {
+  disableFragment,
+  disablePreset,
+  enableFragment,
+  enablePreset,
+} from "@/lib/fragmentApplicator"
 import { useAppStore } from "@/store/useAppStore"
 
 /**
@@ -18,8 +22,8 @@ import { useAppStore } from "@/store/useAppStore"
  * Each selected option gets its own fragment block inside the preset.
  * Deselected options have their fragment blocks removed.
  *
- * Repair pass: on every change, all enabled categories are re-evaluated so
- * manually-deleted anchors are recovered without requiring a disable/re-enable.
+ * Options are sourced from CATEGORIES[].subCategories[].options — the
+ * flat OPTIONS stub has been removed.
  */
 export function useFragmentSync(editorViewRef: React.RefObject<EditorView | null>) {
   const selections = useAppStore((s) => s.selections)
@@ -40,13 +44,15 @@ export function useFragmentSync(editorViewRef: React.RefObject<EditorView | null
     const enabledSet = new Set(enabledCategories)
     const prevEnabledSet = new Set(prev.enabledCategories)
 
-    // Collect changed IDs (toggled or selections updated)
+    // Collect changed category IDs
     const changedIds = new Set<string>()
     for (const c of CATEGORIES) {
       const wasEnabled = prevEnabledSet.has(c.id)
       const isEnabled = enabledSet.has(c.id)
-      const prevSel = JSON.stringify(prev.selections[c.id] ?? [])
-      const nextSel = JSON.stringify(selections[c.id] ?? [])
+
+      // Compare all sub-category selections for this category
+      const prevSel = JSON.stringify(c.subCategories.map((sub) => prev.selections[sub.id] ?? []))
+      const nextSel = JSON.stringify(c.subCategories.map((sub) => selections[sub.id] ?? []))
       if (wasEnabled !== isEnabled || prevSel !== nextSel) changedIds.add(c.id)
     }
     // Repair pass: re-evaluate all enabled categories for missing anchors
@@ -61,12 +67,17 @@ export function useFragmentSync(editorViewRef: React.RefObject<EditorView | null
       const isEnabled = enabledSet.has(categoryId)
 
       if (isEnabled) {
-        const allOptions = OPTIONS[categoryId] ?? []
+        // Flatten all options across sub-categories for this category
+        const allOptions = category.subCategories.flatMap((sub) => sub.options)
         const headingId = `${categoryId}-heading`
-        // schemaOrder: heading first, then options in definition order
         const schemaOrder = [headingId, ...allOptions.map((o) => o.id)]
 
-        // ── Step 1: ensure category preset anchor exists (empty content) ──────
+        // Collect all selected option IDs across this category's sub-categories
+        const selectedOptionIds = new Set(
+          category.subCategories.flatMap((sub) => selections[sub.id] ?? []),
+        )
+
+        // ── Step 1: ensure category preset anchor exists ──────────────────────
         {
           const doc = view.state.doc
           const regions = parseAnchors(doc)
@@ -81,21 +92,33 @@ export function useFragmentSync(editorViewRef: React.RefObject<EditorView | null
           const doc = view.state.doc
           const regions = parseAnchors(doc)
           if (!regions.some((r) => r.id === headingId)) {
-            const change = enableFragment(headingId, categoryId, `## ${category.label}`, schemaOrder, regions, doc)
+            const change = enableFragment(
+              headingId,
+              categoryId,
+              `## ${category.label}`,
+              schemaOrder,
+              regions,
+              doc,
+            )
             if (change) view.dispatch({ changes: change })
           }
         }
 
-        // ── Step 3: sync item fragment anchors ────────────────────────────────
-        const optionIds = new Set(selections[categoryId] ?? [])
-
+        // ── Step 3: sync option fragment anchors ──────────────────────────────
         for (const opt of allOptions) {
           const doc = view.state.doc
           const regions = parseAnchors(doc)
 
-          if (optionIds.has(opt.id)) {
+          if (selectedOptionIds.has(opt.id)) {
             if (!regions.some((r) => r.id === opt.id)) {
-              const change = enableFragment(opt.id, categoryId, `- ${opt.label}`, schemaOrder, regions, doc)
+              const change = enableFragment(
+                opt.id,
+                categoryId,
+                opt.prompt,
+                schemaOrder,
+                regions,
+                doc,
+              )
               if (change) view.dispatch({ changes: change })
             }
           } else {
