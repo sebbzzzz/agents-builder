@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 import { CategoryHeader } from "@/components/category/CategoryHeader"
 import { CategoryList } from "@/components/category/CategoryList"
@@ -10,6 +10,7 @@ import { buildAgentsFile } from "@/lib/buildAgentsFile"
 import { useAppStore } from "@/store/useAppStore"
 
 export function AppShell() {
+  const columnRef = useRef<HTMLElement>(null)
   const selections = useAppStore((s) => s.selections)
   const enabledSubCategories = useAppStore((s) => s.enabledSubCategories)
   const skillTriggers = useAppStore((s) => s.skillTriggers)
@@ -22,14 +23,14 @@ export function AppShell() {
   return (
     <div className="flex h-dvh overflow-hidden">
       {/* Left column — 30% */}
-      <aside className="border-border bg-surface relative flex h-full w-[30%] flex-col border-r">
+      <aside ref={columnRef} className="border-border bg-surface relative flex h-full w-[30%] max-w-[280px] flex-col border-r">
         <CategoryHeader />
         <CategoryList />
-        <FloatingOptionsPanel />
+        <FloatingOptionsPanel columnRef={columnRef} />
       </aside>
 
       {/* Right column — 70% */}
-      <main className="bg-background flex h-full w-[70%] flex-col">
+      <main className="bg-background flex h-full flex-1 flex-col">
         <PreviewPanel />
       </main>
     </div>

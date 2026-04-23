@@ -1,15 +1,23 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { type RefObject, useEffect, useRef } from "react"
+import { X } from "lucide-react"
 
 import { CATEGORIES } from "@/data/categories"
 import { resolveVisibleSubCategories } from "@/lib/resolveVisibleSubCategories"
 import { useAppStore } from "@/store/useAppStore"
+import { Switch } from "@/components/ui/switch"
 import { SubCategoryInputs } from "@/components/category/SubCategoryInputs"
 
-export function FloatingOptionsPanel() {
+interface FloatingOptionsPanelProps {
+  columnRef: RefObject<HTMLElement | null>
+}
+
+export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
   const activeCategory = useAppStore((s) => s.activeCategory)
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
+  const enabledCategories = useAppStore((s) => s.enabledCategories)
+  const toggleCategory = useAppStore((s) => s.toggleCategory)
   const selections = useAppStore((s) => s.selections)
   const enabledSubCategories = useAppStore((s) => s.enabledSubCategories)
   const skillTriggers = useAppStore((s) => s.skillTriggers)
@@ -22,6 +30,7 @@ export function FloatingOptionsPanel() {
   const firstFocusableRef = useRef<HTMLElement | null>(null)
 
   const category = CATEGORIES.find((c) => c.id === activeCategory)
+  const isCategoryEnabled = activeCategory ? enabledCategories.includes(activeCategory) : false
 
   // Close on Escape
   useEffect(() => {
@@ -37,19 +46,28 @@ export function FloatingOptionsPanel() {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [activeCategory, clearActiveCategory])
 
-  // Close on outside click
+  // Close on outside click — excludes the left column, the panel itself,
+  // and any Radix portals (selects, tooltips, etc.)
   useEffect(() => {
     if (!activeCategory) return
 
     const handleMouseDown = (e: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+      const target = e.target as Element
+
+      // Ignore clicks inside Base UI portals (select dropdowns, tooltips, etc.)
+      if (target.closest("[data-base-ui-portal]")) return
+
+      const isInsidePanel = panelRef.current?.contains(target)
+      const isInsideColumn = columnRef.current?.contains(target)
+
+      if (!isInsidePanel && !isInsideColumn) {
         clearActiveCategory()
       }
     }
 
     document.addEventListener("mousedown", handleMouseDown)
     return () => document.removeEventListener("mousedown", handleMouseDown)
-  }, [activeCategory, clearActiveCategory])
+  }, [activeCategory, clearActiveCategory, columnRef])
 
   // Focus first interactive element on open
   useEffect(() => {
@@ -82,26 +100,20 @@ export function FloatingOptionsPanel() {
     >
       {/* Header */}
       <div className="border-border flex items-center justify-between border-b px-4 py-4">
-        <p className="text-foreground text-sm font-semibold">{category.label}</p>
+        <div className="flex items-center gap-2.5">
+          <Switch
+            checked={isCategoryEnabled}
+            onCheckedChange={() => toggleCategory(activeCategory!)}
+            aria-label={`Enable ${category.label}`}
+          />
+          <p className="text-foreground text-sm font-semibold">{category.label}</p>
+        </div>
         <button
           onClick={clearActiveCategory}
           aria-label="Close options panel"
           className="text-muted-foreground hover:text-foreground rounded p-0.5 transition-colors"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <X size={14} />
         </button>
       </div>
 
@@ -115,7 +127,7 @@ export function FloatingOptionsPanel() {
               key={sub.id}
               subCategory={sub}
               selected={selections[sub.id] ?? []}
-              isEnabled={enabledSubCategories[sub.id] !== false}
+              isEnabled={enabledSubCategories[sub.id] === true}
               onEnabledChange={(enabled) => setSubCategoryEnabled(sub.id, enabled)}
               onToggle={(optionId) => toggleSelection(sub.id, optionId)}
               onSelect={(value) => setSelection(sub.id, value)}
