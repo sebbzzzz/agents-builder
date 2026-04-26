@@ -21,18 +21,22 @@ export function AppShell() {
   }, [selections, enabledSubCategories, skillTriggers, setMarkdownOutput])
 
   return (
-    <div className="flex h-dvh overflow-hidden">
-      {/* Left column — 30% */}
-      <aside ref={columnRef} className="border-border bg-surface relative flex h-full w-[30%] max-w-[280px] flex-col border-r">
-        <CategoryHeader />
-        <CategoryList />
-        <FloatingOptionsPanel columnRef={columnRef} />
-      </aside>
+    <>
+      <CategoryHeader />
 
-      {/* Right column — 70% */}
-      <main className="bg-background flex h-full flex-1 flex-col">
-        <PreviewPanel />
-      </main>
-    </div>
+      <div className="flex h-dvh overflow-hidden">
+        <aside
+          ref={columnRef}
+          className="border-border relative flex h-full max-w-70 flex-col border-r md:w-[30%]"
+        >
+          <CategoryList />
+          <FloatingOptionsPanel columnRef={columnRef} />
+        </aside>
+
+        <main className="bg-background flex h-full flex-1 flex-col">
+          <PreviewPanel />
+        </main>
+      </div>
+    </>
   )
 }

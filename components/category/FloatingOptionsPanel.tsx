@@ -99,7 +99,7 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
       className="border-border bg-surface absolute top-0 left-full z-10 flex h-full w-72 flex-col overflow-hidden border-r shadow-lg"
     >
       {/* Header */}
-      <div className="border-border flex items-center justify-between border-b px-4 py-4">
+      <div className="border-border flex items-center justify-between border-b px-4 py-2.5">
         <div className="flex items-center gap-2.5">
           <Switch
             checked={isCategoryEnabled}

@@ -39,8 +39,12 @@ export function CategoryList() {
   const setActiveCategory = useAppStore((s) => s.setActiveCategory)
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
 
+  // TODO: Implement hook that listens to window resize and returns current width, so we can conditionally hide labels and chevron on smaller screens
+  const width = 100 // updates continuously
+  const isMobile = width < 768
+
   return (
-    <nav className="flex-1 overflow-y-auto py-2">
+    <nav className="flex-1 overflow-y-auto">
       <ul className="flex flex-col">
         {CATEGORIES.map((category) => {
           const isActive = activeCategory === category.id
@@ -49,20 +53,18 @@ export function CategoryList() {
           return (
             <li key={category.id}>
               <button
-                onClick={() =>
-                  isActive ? clearActiveCategory() : setActiveCategory(category.id)
-                }
+                onClick={() => (isActive ? clearActiveCategory() : setActiveCategory(category.id))}
                 className={cn(
-                  "flex w-full items-center gap-2.5 border-l-2 px-3 transition-colors",
+                  "flex w-full items-center gap-2.5 border-l-2 p-3 transition-colors md:py-0",
                   isActive
-                    ? "border-accent bg-accent/10 text-foreground"
-                    : "border-transparent text-muted-foreground hover:bg-surface hover:text-foreground",
+                    ? "border-accent bg-surface text-foreground"
+                    : "text-muted-foreground hover:bg-surface hover:text-foreground border-transparent",
                 )}
               >
                 {/* Category icon */}
                 {Icon && (
                   <Icon
-                    size={13}
+                    size={isMobile ? 21 : 13}
                     className={cn(
                       "flex-shrink-0 transition-colors",
                       isActive ? "text-accent" : "text-muted-foreground",
@@ -71,13 +73,15 @@ export function CategoryList() {
                 )}
 
                 {/* Label */}
-                <span className="flex-1 py-2.5 text-left text-sm">{category.label}</span>
+                <span className="hidden flex-1 py-2.5 text-left text-sm md:block">
+                  {category.label}
+                </span>
 
                 {/* Chevron — right side */}
                 <ChevronRight
                   size={13}
                   className={cn(
-                    "flex-shrink-0 transition-colors",
+                    "hidden flex-shrink-0 transition-colors md:block",
                     isActive ? "text-accent" : "text-muted-foreground",
                   )}
                 />

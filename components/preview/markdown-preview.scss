@@ -1,0 +1,12 @@
+// ─── Markdown preview — entry point ───────────────────────────────────────────
+//
+// Import order matters:
+//   1. github-markdown  — prose styles (.markdown-body)
+//   2. highlight        — syntax token colors (.hljs-*)
+//   3. overrides        — Tailwind-preflight fixes (list markers etc.)
+//
+// To customise, edit _variables.scss only. Do not modify the other partials.
+
+@use "github-markdown";
+@use "highlight";
+@use "markdown-overrides";

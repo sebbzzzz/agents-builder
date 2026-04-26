@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={cn("h-full font-sans", inter.variable, jetbrainsMono.variable)}>
-      <body className="bg-background text-foreground h-full antialiased">
+      <body className="bg-background text-foreground h-full overflow-hidden antialiased">
         <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>

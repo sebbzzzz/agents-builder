@@ -1,0 +1,29 @@
+@use "variables" as *;
+
+// ─── Overrides for github-markdown-dark.css ────────────────────────────────
+//
+// The vendored GitHub CSS relies on browser defaults for several values that
+// Tailwind's preflight resets globally. This file restores them inside
+// .markdown-body so they only affect the preview, not the rest of the app.
+
+// ── List markers ──────────────────────────────────────────────────────────────
+// Tailwind preflight sets list-style: none on ul/ol.
+// GitHub CSS assumes browser defaults (disc / decimal) and doesn't re-declare.
+
+.markdown-body {
+  ul {
+    list-style-type: $md-ul-marker;
+
+    ul {
+      list-style-type: $md-ul-nested-marker;
+
+      ul {
+        list-style-type: $md-ul-deep-marker;
+      }
+    }
+  }
+
+  ol {
+    list-style-type: $md-ol-marker;
+  }
+}

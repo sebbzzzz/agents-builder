@@ -38,17 +38,17 @@
 
   /* Radius scale — use these, not arbitrary rounded-[Xpx] */
   --radius-none: 0px;
-  --radius-sm:   2px;   /* inputs, checkboxes, select triggers */
-  --radius-md:   4px;   /* cards, panels, chips */
-  --radius-lg:   var(--radius);
-  --radius-xl:   calc(var(--radius) * 1.4);
+  --radius-sm: 2px; /* inputs, checkboxes, select triggers */
+  --radius-md: 4px; /* cards, panels, chips */
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 
   /* Font-size scale — use these, not arbitrary text-[Xpx] */
-  --text-meta:    9px;    /* badges, pill labels  */
-  --text-label:   10px;   /* eyebrow, owner·installs, mono secondary */
-  --text-caption: 11px;   /* tradeoff / hint text */
-  --text-option:  12.5px; /* option/skill row names */
-  --text-trigger: 12px;   /* trigger input text */
+  --text-meta: 9px; /* badges, pill labels  */
+  --text-label: 10px; /* eyebrow, owner·installs, mono secondary */
+  --text-caption: 11px; /* tradeoff / hint text */
+  --text-option: 12.5px; /* option/skill row names */
+  --text-trigger: 12px; /* trigger input text */
 }
 
 /* ── groundwork design system — warm dark + orange ─────────────────────── */

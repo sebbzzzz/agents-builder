@@ -1,0 +1,121 @@
+@use "variables" as *;
+
+// ─── Syntax highlighting — GitHub Dark ────────────────────────────────────────
+// Token colors for highlight.js (.hljs-*) classes.
+// Source: highlight.js/styles/github-dark — converted to SCSS variables.
+// All color values live in _variables.scss under $hljs-*.
+
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: $md-pre-p;
+}
+
+code.hljs {
+  padding: $md-code-py $md-code-px;
+}
+
+.hljs {
+  color: $hljs-fg;
+  background: $hljs-bg;
+}
+
+// Keywords, types, template tags, template variables
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: $hljs-keyword;
+}
+
+// Titles, class names, functions
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: $hljs-entity;
+}
+
+// Attrs, literals, numbers, operators, variables, selectors
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: $hljs-constant;
+}
+
+// Strings and regexps
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  color: $hljs-string;
+}
+
+// Built-ins and symbols
+.hljs-built_in,
+.hljs-symbol {
+  color: $hljs-variable;
+}
+
+// Comments, code spans, formulas
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: $hljs-comment;
+}
+
+// Tag names, quotes, selector tags
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: $hljs-tag;
+}
+
+// Storage modifier / import
+.hljs-subst {
+  color: $hljs-storage;
+}
+
+// Markup heading
+.hljs-section {
+  color: $hljs-section;
+  font-weight: bold;
+}
+
+// Markup list bullet
+.hljs-bullet {
+  color: $hljs-bullet;
+}
+
+// Markup italic / bold
+.hljs-emphasis {
+  color: $hljs-fg;
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: $hljs-fg;
+  font-weight: bold;
+}
+
+// Diff: added
+.hljs-addition {
+  color: $hljs-inserted-fg;
+  background-color: $hljs-inserted-bg;
+}
+
+// Diff: removed
+.hljs-deletion {
+  color: $hljs-deleted-fg;
+  background-color: $hljs-deleted-bg;
+}

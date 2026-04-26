@@ -18,13 +18,17 @@ interface OptionRowProps {
  * tooltip in a consistent layout. Used by multi (checkbox) and select (radio)
  * sub-category types.
  */
-export function OptionRow({ label, tooltip, checked, control, onClick, className }: OptionRowProps) {
+export function OptionRow({
+  label,
+  tooltip,
+  checked,
+  control,
+  onClick,
+  className,
+}: OptionRowProps) {
   const inner = (
     <label
-      className={cn(
-        "flex w-full cursor-pointer items-center gap-2 transition-colors",
-        className,
-      )}
+      className={cn("flex w-full cursor-pointer items-center gap-2 transition-colors", className)}
       onClick={onClick}
     >
       {control}
