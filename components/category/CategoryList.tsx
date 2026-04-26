@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 
 import { CATEGORIES } from "@/data/categories"
+import { useWindowWidth } from "@/hooks/useWindowWidth"
 import { cn } from "@/lib/utils"
 import { useAppStore } from "@/store/useAppStore"
 
@@ -39,8 +40,7 @@ export function CategoryList() {
   const setActiveCategory = useAppStore((s) => s.setActiveCategory)
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
 
-  // TODO: Implement hook that listens to window resize and returns current width, so we can conditionally hide labels and chevron on smaller screens
-  const width = 100 // updates continuously
+  const width = useWindowWidth()
   const isMobile = width < 768
 
   return (
