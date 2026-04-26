@@ -1,19 +1,4 @@
-# Spec: category-panel
-
-## Purpose
-
-TBD — defines the left-column panel that lists all categories, handles selection, and shows a placeholder checklist area.
-## Requirements
-### Requirement: Category list renders all 11 categories
-The system SHALL render a scrollable vertical list of all 11 categories defined in `data/categories.ts` in the left column, in the order specified by the spec (Tech Stack first).
-
-#### Scenario: All categories are visible
-- **WHEN** the user opens the app
-- **THEN** all 11 category names appear in the left panel list
-
-#### Scenario: Tech Stack is the first item
-- **WHEN** the category list is rendered
-- **THEN** "Tech Stack" appears at the top of the list
+## MODIFIED Requirements
 
 ### Requirement: Clicking a category sets it as active
 The system SHALL open the floating options panel to the right of the left column when the user clicks a category, SHALL highlight the active category row with a distinct background color, and SHALL close the panel only when the user clicks outside of both the floating panel and the left column. Clicking the active category again SHALL close the panel.
@@ -63,27 +48,7 @@ The system SHALL render all sub-options in the disabled (unchecked/off) state wh
 - **WHEN** the floating panel opens for any category
 - **THEN** all sub-options are in the disabled state
 
-### Requirement: Checklist area renders below the category list
-The system SHALL render a placeholder checklist area below the category list that displays the name of the active category and a "coming soon" or empty state message when no options are loaded.
-
-#### Scenario: Active category name appears in checklist area
-- **WHEN** the user clicks a category
-- **THEN** the checklist area header updates to show that category's name
-
-#### Scenario: Empty state is shown when no options exist
-- **WHEN** the active category has no options loaded yet
-- **THEN** the checklist area displays a non-empty placeholder (e.g., "Options coming soon")
-
-### Requirement: Left panel has a branding header
-The system SHALL render a header at the top of the left column containing the app name or logo, pinned to the top of the column.
-
-#### Scenario: App name is visible
-- **WHEN** the app loads
-- **THEN** the left column header shows the app name (e.g., "AGENTS.md")
-
-#### Scenario: Header does not scroll away
-- **WHEN** the user scrolls the category list
-- **THEN** the branding header remains pinned at the top of the left column
+## MODIFIED Requirements
 
 ### Requirement: Left panel has a constrained width
 The system SHALL render the left column with a maximum width of 280 pixels.

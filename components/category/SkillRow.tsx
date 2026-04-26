@@ -31,10 +31,7 @@ export function SkillRow({ option, checked, onToggle }: SkillRowProps) {
           {option.label}
         </span>
         {(option.owner || option.installs) && (
-          <span
-            className="text-foreground-4 font-mono"
-            style={{ fontSize: "var(--text-label)" }}
-          >
+          <span className="text-foreground-4 font-mono" style={{ fontSize: "var(--text-label)" }}>
             {option.owner}
             {option.owner && option.installs && " · "}
             {option.installs}

@@ -34,13 +34,13 @@ export function PreviewHeader() {
   }
 
   return (
-    <div className="border-border flex items-center justify-between border-b px-4 py-3">
+    <div className="border-border flex items-center justify-between border-b">
       {/* View toggle */}
-      <div className="border-border flex rounded-md border p-0.5">
+      <div className="flex">
         <button
           onClick={() => setActiveView("editor")}
           className={cn(
-            "rounded px-3 py-1 text-xs font-medium transition-colors",
+            "px-5 py-3 text-xs font-medium transition-colors",
             activeView === "editor"
               ? "bg-accent text-accent-foreground"
               : "text-muted-foreground hover:text-foreground",
@@ -51,10 +51,10 @@ export function PreviewHeader() {
         <button
           onClick={() => setActiveView("preview")}
           className={cn(
-            "rounded px-3 py-1 text-xs font-medium transition-colors",
+            "px-5 py-3 text-xs font-medium transition-colors",
             activeView === "preview"
               ? "bg-accent text-accent-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-muted-foreground hover:text-foreground border-r",
           )}
         >
           Preview
@@ -62,20 +62,20 @@ export function PreviewHeader() {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         <button
           disabled={!hasContent}
           onClick={handleCopy}
-          className="border-border text-muted-foreground hover:border-accent hover:text-accent rounded border px-3 py-1 text-xs transition-colors"
+          className="text-muted-foreground hover:text-accent border-x px-5 py-3 text-xs transition-colors"
         >
           {copied ? "Copied!" : "Copy"}
         </button>
         <button
           disabled={!hasContent}
           onClick={handleExport}
-          className="bg-accent text-accent-foreground rounded px-3 py-1 text-xs font-medium transition-opacity hover:opacity-90"
+          className="bg-accent text-accent-foreground px-5 py-3 text-xs font-medium transition-opacity hover:opacity-90"
         >
-          Export .md
+          Export.md
         </button>
       </div>
     </div>
