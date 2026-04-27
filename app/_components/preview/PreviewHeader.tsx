@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 import { cn } from "@/common/utils/cn"
-import { stripAnchors } from "@/app/_utils/stripAnchors"
+import { stripMarkers } from "@/app/_utils/stripMarkers"
 import { useAppStore } from "@/store/useAppStore"
 import { useDocumentStore } from "@/store/useDocumentStore"
 
@@ -15,7 +15,7 @@ export function PreviewHeader() {
   const [copied, setCopied] = useState(false)
 
   const hasContent = content.length > 0
-  const exportContent = stripAnchors(content)
+  const exportContent = stripMarkers(content)
 
   function handleCopy() {
     navigator.clipboard.writeText(exportContent)
