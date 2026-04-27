@@ -20,6 +20,7 @@ import { CATEGORIES } from "@/data/categories"
 import { useWindowWidth } from "@/common/hooks/useWindowWidth"
 import { cn } from "@/common/utils/cn"
 import { useAppStore } from "@/store/useAppStore"
+import { MOBILE_BREAKPOINT_PX } from "@/app/_utils/constants"
 
 const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   Layers,
@@ -41,7 +42,7 @@ export function CategoryList() {
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
 
   const width = useWindowWidth()
-  const isMobile = width < 768
+  const isMobile = width < MOBILE_BREAKPOINT_PX
 
   return (
     <nav className="flex-1 overflow-y-auto">

@@ -5,7 +5,7 @@ import { X } from "lucide-react"
 
 import { CATEGORIES, type SubCategory } from "@/data/categories"
 import { useAppStore } from "@/store/useAppStore"
-import { useEditorContext } from "@/app/_contexts/EditorContext"
+import { useEditorContext } from "@/common/providers/EditorContext"
 
 import { SubCategoryInputs } from "./SubCategoryInputs"
 

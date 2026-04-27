@@ -76,21 +76,21 @@ export function SubCategoryInputs({
         {/* ── multi / skills / triggers / input — checkbox list */}
         {type !== "select" && (
           <ul className="space-y-1.5">
-            {options.map((opt) => (
-              <li key={opt.id}>
-                <OptionRow
-                  label={opt.label}
-                  tooltip={opt.tooltip}
-                  checked={selected.includes(opt.id)}
-                  control={
-                    <Checkbox
-                      checked={selected.includes(opt.id)}
-                      onCheckedChange={() => onToggle(opt.id)}
-                    />
-                  }
-                />
-              </li>
-            ))}
+            {options.map((opt) => {
+              const isChecked = selected.includes(opt.id)
+              return (
+                <li key={opt.id}>
+                  <OptionRow
+                    label={opt.label}
+                    tooltip={opt.tooltip}
+                    checked={isChecked}
+                    control={
+                      <Checkbox checked={isChecked} onCheckedChange={() => onToggle(opt.id)} />
+                    }
+                  />
+                </li>
+              )
+            })}
           </ul>
         )}
       </div>

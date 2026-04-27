@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 
-import { useEditorContext } from "@/app/_contexts/EditorContext"
+import { useEditorContext } from "@/common/providers/EditorContext"
 import { useDocumentStore } from "@/store/useDocumentStore"
 
 const PLACEHOLDER = "Select options from the left to start your AGENTS.md"

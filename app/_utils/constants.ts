@@ -1,4 +1,5 @@
 export const SELECT_THRESHOLD = 5
+export const MOBILE_BREAKPOINT_PX = 768
 
 export const TRIGGER_TEMPLATES = [
   "when creating a new component",
