@@ -3,8 +3,8 @@ import "@/styles/globals.css"
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 
-import { cn } from "@/lib/utils"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { cn } from "@/common/utils/cn"
+import { TooltipProvider } from "@/common/components/UI/Tooltip"
 
 const inter = Inter({
   subsets: ["latin"],

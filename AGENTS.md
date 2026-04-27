@@ -67,33 +67,54 @@ Do not introduce new libraries or frameworks without asking. The stack is intent
 
 ## Architecture
 
-### Folder structure (feature-based)
+### Folder structure (route-scoped + shared common)
+
+Each route owns its private modules. Shared code lives in `common/`. The `_` prefix marks Next.js private folders (not routable).
 
 ```
-app/                    # Next.js App Router — routing only
-components/             # UI components — render only, no logic
-  common/               # Reusable primitives (buttons, tooltips, etc.)
-hooks/                  # Custom hooks — all stateful logic lives here
-lib/                    # Pure utilities, formatters, constants
-types/                  # TypeScript interfaces and types
-data/                   # Static data: category definitions, skills snapshot
-styles/                 # Global styles, Tailwind config, etc.
+app/                         # Next.js App Router — pages and layouts
+  _components/               # Components private to this route (not routable)
+    category/                # Feature sub-folder
+    preview/                 # Feature sub-folder
+  _hooks/                    # Hooks private to this route
+  _utils/                    # Utils private to this route
+  types/                     # Types scoped to this route
+  page.tsx
+  layout.tsx
+  <route>/                   # Future routes follow the same pattern
+    _components/
+    _hooks/
+    _utils/
+    types/
+    page.tsx
+
+common/                      # Shared across all routes — import with @/common/
+  components/                # Reusable primitives and UI elements
+    UI/                      # Low-level UI atoms (Button, Input, Tooltip, etc.)
+  hooks/                     # Shared hooks (e.g. useWindowWidth)
+  types/                     # Global type declarations (global.d.ts, scss.d.ts)
+  utils/                     # Shared pure utilities (e.g. cn)
+
+data/                        # Static data: category definitions, skills snapshot
 ```
 
 ### Layer responsibilities
 
-- **`app/`** — route handlers only; delegate immediately to components
-- **`components/`** — render only; no data fetching, no business logic
-- **`hooks/`** — own all stateful behavior (selected options, preview state, etc.)
-- **`lib/`** — pure functions; no React, no side effects
+- **`app/`** — pages and layouts only; delegate logic to `_components/`, `_hooks/`, `_utils/`
+- **`app/_components/`** — render only; no data fetching, no business logic; private to their route
+- **`app/_hooks/`** — own stateful behavior scoped to their route
+- **`app/_utils/`** — pure functions scoped to their route
+- **`app/types/`** — TypeScript types scoped to their route
+- **`common/`** — shared code used by more than one route; no route-specific assumptions
 - **`data/`** — static content; category definitions, tooltips, skills list
 
 ### Scope rules
 
 - Never put business logic inside a component
 - Never fetch data in a UI component — use hooks or server components
-- Never use relative imports from the root — always use `@/` aliases
-- Never import across feature boundaries — use `common/` for common code
+- Always use `@/` aliases — never relative imports from the root
+- Route-private code goes in the route's `_components/`, `_hooks/`, `_utils/`, `types/`
+- Code used by more than one route goes in `common/`
 
 ---
 
@@ -103,11 +124,16 @@ styles/                 # Global styles, Tailwind config, etc.
 
 | Type | Convention | Example |
 |------|------------|---------|
-| React components | PascalCase | `CategoryList.tsx`, `PreviewPanel.tsx` |
+| React component files | camelCase | `categoryList.tsx`, `previewPanel.tsx` |
+| React component exports | PascalCase | `export function CategoryList` |
 | Hooks | camelCase, `use` prefix | `useSelections.ts`, `usePreview.ts` |
 | Utility files | camelCase | `formatMarkdown.ts`, `buildAgentsFile.ts` |
+| Type files | PascalCase, one type per file | `AppStore.ts`, `Category.ts` |
 | Pages / routes | kebab-case | `app/about/page.tsx` |
 | Data files | kebab-case | `categories.ts`, `skills-snapshot.ts` |
+| Private Next.js folders | `_` prefix | `_components/`, `_hooks/`, `_utils/` |
+
+**Types:** each type/interface lives in its own file inside the route's `types/` folder (or `common/types/` if shared). Do not bundle unrelated types into a single file.
 
 ### Variable & function naming
 

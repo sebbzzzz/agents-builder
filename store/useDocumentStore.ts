@@ -2,7 +2,7 @@
 
 import { create } from "zustand"
 
-import type { DocumentStore } from "@/types/store"
+import type { DocumentStore } from "@/app/types/DocumentStore"
 
 export const useDocumentStore = create<DocumentStore>()((set) => ({
   content: "",

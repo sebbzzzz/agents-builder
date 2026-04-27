@@ -2,7 +2,7 @@
 
 import { create } from "zustand"
 
-import type { AppStore } from "@/types/store"
+import type { AppStore } from "@/app/types/DocumentStore"
 
 export const useAppStore = create<AppStore>()((set) => ({
   // ── Initial state ─────────────────────────────────────────────────────────
