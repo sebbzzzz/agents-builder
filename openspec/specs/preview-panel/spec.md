@@ -25,19 +25,23 @@ The system SHALL render a sticky header with a toggle containing two options: "E
 - **THEN** the "Editor" option is active and the editor surface is displayed
 
 ### Requirement: Editor view renders a CodeMirror 6 markdown editor
-The system SHALL display a CodeMirror 6 editor instance when `activeView === "editor"`. The editor SHALL be initialised with the assembled content of `useDocumentStore.nodes` and remain uncontrolled (not re-initialised on every render).
+The system SHALL display a CodeMirror 6 editor instance when `activeView === "editor"`. The editor SHALL be initialised with the current `useDocumentStore` content and remain uncontrolled (not re-initialised on every render). `CodeEditorView` MUST NOT accept an `editorViewRef` prop — it SHALL call `useEditorContext().mount(container, content)` in its mount effect and `useEditorContext().destroy()` in its cleanup. `PreviewPanel` MUST NOT accept or forward an `editorViewRef` prop.
 
 #### Scenario: Editor surface is displayed in Editor view
 - **WHEN** the active view is "editor"
 - **THEN** a CodeMirror editor is rendered and accepts user input
 
-#### Scenario: Editor is initialised from the document node array
+#### Scenario: Editor is initialised from the document store
 - **WHEN** the EditorView mounts
-- **THEN** the initial editor content equals `nodes.map(n => n.content).join('\n\n')`
+- **THEN** the initial editor content equals the current `useDocumentStore` content value
 
-#### Scenario: Editor displays empty state when no nodes exist
-- **WHEN** `activeView === "editor"` and the node array is empty
-- **THEN** a placeholder message is displayed (e.g., "Select options from the left to start your AGENTS.md")
+#### Scenario: Editor displays empty state when no content exists
+- **WHEN** `activeView === "editor"` and the document store content is empty
+- **THEN** a placeholder message is displayed ("Select options from the left to start your AGENTS.md")
+
+#### Scenario: Editor cleans up via context on unmount
+- **WHEN** `CodeEditorView` unmounts
+- **THEN** `useEditorContext().destroy()` is called, tearing down the CodeMirror instance
 
 ### Requirement: Preview view renders the assembled markdown as formatted HTML
 The system SHALL render the assembled `nodes.map(n => n.content).join('\n\n')` using `react-markdown` when `activeView === "preview"`. The rendered output SHALL be wrapped in a container with the `.markdown-body` class that applies GitHub-flavored visual hierarchy: sized headings (h1–h6), styled inline code, fenced code blocks with a distinct background, blockquotes with a left border, bordered tables, indented lists, styled horizontal rules, and colored links. All styles SHALL use the app's existing CSS custom property tokens to stay consistent with the dark theme.

@@ -3,8 +3,8 @@ import "@/styles/globals.css"
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 
-import { cn } from "@/lib/utils"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { cn } from "@/common/utils/cn"
+import { TooltipProvider } from "@/common/components/UI/Tooltip"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={cn("h-full font-sans", inter.variable, jetbrainsMono.variable)}>
-      <body className="bg-background text-foreground h-full overflow-hidden antialiased">
+      <body className="bg-background text-foreground flex h-dvh flex-col antialiased">
         <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>
