@@ -1,7 +1,7 @@
 "use client"
 
 import type { SubCategory } from "@/data/categories"
-import { SELECT_THRESHOLD } from "@/app/_utils/constants"
+import { TRIGGER_TEMPLATES, SELECT_THRESHOLD } from "@/app/_utils/constants"
 import { Checkbox } from "@/common/components/UI/Checkbox"
 import { RadioGroup, RadioGroupItem } from "@/common/components/UI/RadioGroup"
 import {
@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/common/components/UI/Select"
-import { TooltipProvider } from "@/common/components/UI/Tooltip"
 import { OptionRow } from "@/common/components/OptionRow"
 
 interface SubCategoryInputsProps {
@@ -19,6 +18,10 @@ interface SubCategoryInputsProps {
   selected: string[]
   onToggle: (optionId: string) => void
   onSelect: (optionId: string | null) => void
+  inputValues?: Record<string, string>
+  onInputChange?: (optionId: string, value: string) => void
+  skillTriggers?: Record<string, string[]>
+  onSkillTriggerToggle?: (skillId: string, triggerId: string) => void
 }
 
 export function SubCategoryInputs({
@@ -26,12 +29,15 @@ export function SubCategoryInputs({
   selected,
   onToggle,
   onSelect,
+  inputValues,
+  onInputChange,
+  skillTriggers,
+  onSkillTriggerToggle,
 }: SubCategoryInputsProps) {
   const { type, options, label } = subCategory
 
   return (
-    <TooltipProvider>
-      <div className="mb-5">
+    <div className="mb-5">
         <div className="mb-2 flex items-center gap-2">
           <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
             {label}
@@ -73,8 +79,73 @@ export function SubCategoryInputs({
           </Select>
         )}
 
-        {/* ── multi / skills / triggers / input — checkbox list */}
-        {type !== "select" && (
+        {/* ── input — text field per option ────────────────── */}
+        {type === "input" && (
+          <ul className="space-y-2">
+            {options.map((opt) => (
+              <li key={opt.id} className="flex items-center gap-2">
+                <span className="text-muted-foreground w-24 shrink-0 text-xs">{opt.label}</span>
+                <input
+                  type="text"
+                  placeholder={opt.placeholder ?? ""}
+                  value={inputValues?.[opt.id] ?? ""}
+                  onChange={(e) => onInputChange?.(opt.id, e.target.value)}
+                  className="border-border bg-background text-foreground placeholder:text-muted-foreground flex-1 rounded border px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-current"
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* ── skills — card + inline trigger checkboxes ─────── */}
+        {type === "skills" && (
+          <ul className="space-y-2">
+            {options.map((opt) => {
+              const isChecked = selected.includes(opt.id)
+              const triggers = skillTriggers?.[opt.id] ?? []
+              return (
+                <li key={opt.id}>
+                  <label className="flex w-full cursor-pointer items-start gap-2">
+                    <Checkbox
+                      checked={isChecked}
+                      onCheckedChange={() => onToggle(opt.id)}
+                      className="shrink-0"
+                    />
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <span className="text-foreground text-xs">{opt.label}</span>
+                      {opt.owner && (
+                        <span className="text-muted-foreground mt-0.5 font-mono text-[10px] leading-tight">
+                          {opt.owner}
+                          {opt.installs ? ` · ${opt.installs}` : ""}
+                        </span>
+                      )}
+                    </div>
+                  </label>
+
+                  {isChecked && (
+                    <ul className="mt-1.5 ml-5 space-y-1">
+                      {TRIGGER_TEMPLATES.map((tpl) => (
+                        <li key={tpl.id}>
+                          <label className="text-muted-foreground flex cursor-pointer items-center gap-2 text-xs">
+                            <Checkbox
+                              checked={triggers.includes(tpl.id)}
+                              onCheckedChange={() => onSkillTriggerToggle?.(opt.id, tpl.id)}
+                              className="shrink-0"
+                            />
+                            {tpl.label}
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        )}
+
+        {/* ── multi / triggers — checkbox list ──────────────── */}
+        {(type === "multi" || type === "triggers") && (
           <ul className="space-y-1.5">
             {options.map((opt) => {
               const isChecked = selected.includes(opt.id)
@@ -94,6 +165,5 @@ export function SubCategoryInputs({
           </ul>
         )}
       </div>
-    </TooltipProvider>
   )
 }

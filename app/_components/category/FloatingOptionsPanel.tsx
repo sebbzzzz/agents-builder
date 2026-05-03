@@ -1,9 +1,11 @@
 "use client"
 
 import { type RefObject, useEffect, useRef, useState } from "react"
-import { X } from "lucide-react"
+import { Loader2, X } from "lucide-react"
 
-import { CATEGORIES, type SubCategory } from "@/data/categories"
+import { CATEGORIES, type Option, type SubCategory } from "@/data/categories"
+import { TRIGGER_TEMPLATES } from "@/app/_utils/constants"
+import { useFetchSkills } from "@/app/_hooks/useFetchSkills"
 import { useAppStore } from "@/store/useAppStore"
 import { useEditorContext } from "@/common/providers/EditorContext"
 
@@ -23,14 +25,19 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
 
   const { injectOption } = useEditorContext()
+  const { skills: liveSkills, isLoading: skillsLoading } = useFetchSkills()
 
   const panelRef = useRef<HTMLDivElement>(null)
   const [selections, setSelections] = useState<Record<string, string[]>>({})
+  const [inputValues, setInputValues] = useState<Record<string, string>>({})
+  const [skillTriggers, setSkillTriggers] = useState<Record<string, string[]>>({})
 
   const category = CATEGORIES.find((c) => c.id === activeCategory)
 
   useEffect(() => {
     setSelections({})
+    setInputValues({})
+    setSkillTriggers({})
   }, [activeCategory])
 
   useEffect(() => {
@@ -62,6 +69,14 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
     isSubCategoryVisible(sub, allSelectedIds),
   )
 
+  // For the skills category, override static options with live data
+  function getOptionsForSub(sub: SubCategory): Option[] {
+    if (sub.type === "skills" && activeCategory === "available-skills") {
+      return liveSkills
+    }
+    return sub.options
+  }
+
   function handleToggle(subId: string, optionId: string) {
     setSelections((prev) => {
       const current = prev[subId] ?? []
@@ -76,26 +91,69 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
     setSelections((prev) => ({ ...prev, [subId]: optionId ? [optionId] : [] }))
   }
 
+  function handleInputChange(optionId: string, value: string) {
+    setInputValues((prev) => ({ ...prev, [optionId]: value }))
+  }
+
+  function handleSkillTriggerToggle(skillId: string, triggerId: string) {
+    setSkillTriggers((prev) => {
+      const current = prev[skillId] ?? []
+      const next = current.includes(triggerId)
+        ? current.filter((id) => id !== triggerId)
+        : [...current, triggerId]
+      return { ...prev, [skillId]: next }
+    })
+  }
+
   function handleAdd() {
     for (const sub of visibleSubCategories) {
-      const subSelected = selections[sub.id] ?? []
-      for (const opt of sub.options) {
-        if (subSelected.includes(opt.id)) {
-          injectOption(category!.label, opt.prompt)
+      if (sub.type === "input") {
+        for (const opt of sub.options) {
+          const val = inputValues[opt.id]?.trim()
+          if (val) {
+            injectOption(category!.label, opt.prompt.replace("{value}", val))
+          }
+        }
+      } else if (sub.type === "skills") {
+        const subSelected = selections[sub.id] ?? []
+        const opts = getOptionsForSub(sub)
+        for (const opt of opts) {
+          if (subSelected.includes(opt.id)) {
+            injectOption("Skills", opt.prompt)
+            const triggers = skillTriggers[opt.id] ?? []
+            for (const tplId of triggers) {
+              const tpl = TRIGGER_TEMPLATES.find((t) => t.id === tplId)
+              if (tpl) {
+                injectOption("Auto-invoke Skills", tpl.prompt.replace("{skill}", opt.label))
+              }
+            }
+          }
+        }
+      } else {
+        const subSelected = selections[sub.id] ?? []
+        for (const opt of sub.options) {
+          if (subSelected.includes(opt.id)) {
+            injectOption(category!.label, opt.prompt)
+          }
         }
       }
     }
     setSelections({})
+    setInputValues({})
+    setSkillTriggers({})
   }
 
-  const hasSelections = allSelectedIds.size > 0
+  const hasSelections =
+    allSelectedIds.size > 0 ||
+    Object.values(inputValues).some((v) => v.trim().length > 0) ||
+    Object.values(skillTriggers).some((t) => t.length > 0)
 
   return (
     <div
       ref={panelRef}
       role="region"
       aria-label={category.label}
-      className="border-border bg-surface absolute top-0 left-full z-10 flex h-full w-72 flex-col overflow-hidden border-r shadow-lg"
+      className="border-border bg-surface absolute top-0 left-full z-10 flex h-full w-72 flex-col overflow-hidden border-r-2 shadow-lg md:w-80"
     >
       <div className="border-border flex items-center justify-between border-b px-4 py-2.5">
         <p className="text-foreground text-sm font-semibold">{category.label}</p>
@@ -109,6 +167,13 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
+        {activeCategory === "available-skills" && skillsLoading && (
+          <div className="text-muted-foreground mb-3 flex items-center gap-1.5 text-xs">
+            <Loader2 size={10} className="animate-spin" />
+            Loading live skills…
+          </div>
+        )}
+
         {visibleSubCategories.length === 0 ? (
           <p className="text-muted-foreground text-xs">No options available.</p>
         ) : (
@@ -117,10 +182,14 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
             return (
               <SubCategoryInputs
                 key={sub.id}
-                subCategory={sub}
+                subCategory={{ ...sub, options: getOptionsForSub(sub) }}
                 selected={subSelected}
                 onToggle={(optionId) => handleToggle(sub.id, optionId)}
                 onSelect={(optionId) => handleSelect(sub.id, optionId)}
+                inputValues={inputValues}
+                onInputChange={handleInputChange}
+                skillTriggers={skillTriggers}
+                onSkillTriggerToggle={handleSkillTriggerToggle}
               />
             )
           })

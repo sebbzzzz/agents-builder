@@ -9,8 +9,12 @@ import {
   Grid,
   type LucideProps,
   Layers,
+  Lock,
   Paintbrush,
   PlayCircle,
+  Rocket,
+  Settings2,
+  ShieldCheck,
   ShieldOff,
   Terminal,
   Zap,
@@ -34,6 +38,10 @@ const ICON_MAP: Record<string, React.ComponentType<LucideProps>> = {
   ShieldOff,
   Terminal,
   CheckCircle,
+  ShieldCheck,
+  Lock,
+  Settings2,
+  Rocket,
 }
 
 export function CategoryList() {

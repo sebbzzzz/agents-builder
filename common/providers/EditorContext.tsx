@@ -31,7 +31,7 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
   const clearWelcome = useCallback((view: CMEditorView) => {
     if (!isWelcomeRef.current) return
     isWelcomeRef.current = false
-    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "" } })
+    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" } })
   }, [])
 
   const mount = useCallback(
@@ -52,13 +52,17 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
               if (!update.docChanged) return
               if (isWelcomeRef.current) {
                 isWelcomeRef.current = false
+                const view = update.view
+                Promise.resolve().then(() => {
+                  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" } })
+                })
                 return
               }
               setIsDirty(true)
               scheduleAutoSave(update.state.doc.toString())
             }),
             EditorView.domEventHandlers({
-              mousedown: (_e, view) => {
+              keydown: (_e, view) => {
                 clearWelcome(view)
                 return false
               },
