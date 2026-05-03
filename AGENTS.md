@@ -90,10 +90,13 @@ app/                         # Next.js App Router — pages and layouts
 
 common/                      # Shared across all routes — import with @/common/
   components/                # Reusable primitives and UI elements
-    UI/                      # Low-level UI atoms (Button, Input, Tooltip, etc.)
+    UI/                      # Low-level UI atoms (Tooltip, etc.)
   hooks/                     # Shared hooks (e.g. useWindowWidth)
+  providers/                 # App-wide React context providers (e.g. EditorContext)
   types/                     # Global type declarations (global.d.ts, scss.d.ts)
   utils/                     # Shared pure utilities (e.g. cn)
+
+store/                       # Zustand global stores — import with @/store/
 
 data/                        # Static data: category definitions, skills snapshot
 ```
@@ -106,6 +109,8 @@ data/                        # Static data: category definitions, skills snapsho
 - **`app/_utils/`** — pure functions scoped to their route
 - **`app/types/`** — TypeScript types scoped to their route
 - **`common/`** — shared code used by more than one route; no route-specific assumptions
+- **`common/providers/`** — app-wide React context providers; mounted at the layout or page level
+- **`store/`** — Zustand global stores; one store per domain
 - **`data/`** — static content; category definitions, tooltips, skills list
 
 ### Scope rules
@@ -124,7 +129,7 @@ data/                        # Static data: category definitions, skills snapsho
 
 | Type | Convention | Example |
 |------|------------|---------|
-| React component files | camelCase | `categoryList.tsx`, `previewPanel.tsx` |
+| React component files | PascalCase | `CategoryList.tsx`, `PreviewPanel.tsx` |
 | React component exports | PascalCase | `export function CategoryList` |
 | Hooks | camelCase, `use` prefix | `useSelections.ts`, `usePreview.ts` |
 | Utility files | camelCase | `formatMarkdown.ts`, `buildAgentsFile.ts` |
@@ -174,8 +179,8 @@ import { useState } from "react"
 import { NextRequest } from "next/server"
 
 // 2. Internal aliases (@/)
-import { cn } from "@/lib/utils"
-import { UserCard } from "@/components/user/UserCard"
+import { cn } from "@/common/utils/cn"
+import { UserCard } from "@/common/components/UserCard"
 
 // 3. Relative paths
 import { formatDate } from "./utils"
@@ -323,7 +328,7 @@ Avoid these actively:
 - **Silent error swallowing** — never `catch {}` or `catch (e) {}` without handling or logging
 - **Relative imports from root** — always `@/hooks/useSelections`, never `../../hooks/useSelections`
 - **Prop drilling** — if passing props more than 2 levels deep, move state to a hook
-- **Magic strings** — use named constants in `lib/` or `data/`
+- **Magic strings** — use named constants in `_utils/` or `data/`
 - **Monolithic functions** — if a function exceeds ~40 lines, it needs splitting
 
 ---

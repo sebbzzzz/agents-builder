@@ -6,7 +6,7 @@ import { CategoryHeader } from "@/app/_components/category/CategoryHeader"
 import { CategoryList } from "@/app/_components/category/CategoryList"
 import { FloatingOptionsPanel } from "@/app/_components/category/FloatingOptionsPanel"
 import { PreviewPanel } from "@/app/_components/preview/PreviewPanel"
-import { EditorProvider } from "@/app/_contexts/EditorContext"
+import { EditorProvider } from "@/common/providers/EditorContext"
 import { useAppStore } from "@/store/useAppStore"
 
 export default function Home() {
