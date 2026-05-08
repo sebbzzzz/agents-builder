@@ -9,6 +9,7 @@ import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
 
 import { useAutoSave } from "@/app/_hooks/useAutoSave"
+import { WELCOME_CONTENT } from "@/app/_utils/constants"
 import { parseHeadings } from "@/app/_utils/parseHeadings"
 import { useDocumentStore } from "@/store/useDocumentStore"
 
@@ -22,13 +23,22 @@ const EditorContext = createContext<EditorContextValue | null>(null)
 
 export function EditorProvider({ children }: { children: React.ReactNode }) {
   const viewRef = useRef<CMEditorView | null>(null)
+  const isWelcomeRef = useRef(true)
 
   const setIsDirty = useDocumentStore((s) => s.setIsDirty)
   const scheduleAutoSave = useAutoSave()
 
+  const clearWelcome = useCallback((view: CMEditorView) => {
+    if (!isWelcomeRef.current) return
+    isWelcomeRef.current = false
+    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" } })
+  }, [])
+
   const mount = useCallback(
     (container: HTMLElement, content: string) => {
       if (!container) return
+
+      isWelcomeRef.current = content === WELCOME_CONTENT
 
       viewRef.current = new EditorView({
         state: EditorState.create({
@@ -40,8 +50,22 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
             EditorView.lineWrapping,
             EditorView.updateListener.of((update) => {
               if (!update.docChanged) return
+              if (isWelcomeRef.current) {
+                isWelcomeRef.current = false
+                const view = update.view
+                Promise.resolve().then(() => {
+                  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" } })
+                })
+                return
+              }
               setIsDirty(true)
               scheduleAutoSave(update.state.doc.toString())
+            }),
+            EditorView.domEventHandlers({
+              keydown: (_e, view) => {
+                clearWelcome(view)
+                return false
+              },
             }),
             EditorView.theme({
               "&": { height: "100%", fontSize: "13px" },
@@ -53,7 +77,7 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
         parent: container,
       })
     },
-    [setIsDirty, scheduleAutoSave],
+    [setIsDirty, scheduleAutoSave, clearWelcome],
   )
 
   const destroy = useCallback(() => {
@@ -64,6 +88,8 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
   const injectOption = useCallback((categoryLabel: string, prompt: string) => {
     const view = viewRef.current
     if (!view) return
+
+    clearWelcome(view)
 
     const doc = view.state.doc
     const { h2 } = parseHeadings(doc)
@@ -87,9 +113,12 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
     }
 
     view.dispatch({ changes: { from: insertPos, insert: insertText } })
-  }, [])
+  }, [clearWelcome])
 
-  const value = useMemo(() => ({ mount, destroy, injectOption }), [mount, destroy, injectOption])
+  const value = useMemo(
+    () => ({ mount, destroy, injectOption }),
+    [mount, destroy, injectOption],
+  )
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
 }
