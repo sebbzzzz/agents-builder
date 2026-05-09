@@ -48,17 +48,13 @@ export async function GET() {
   try {
     const apiKey = process.env.SKILLS_API_KEY || null
 
-    const curated = await fetchSkills(CURATED_ENDPOINT, apiKey)
-    if (curated && curated.length >= 15) {
-      return Response.json(normalize(curated))
-    }
+    const [curated, leaderboard] = await Promise.all([
+      fetchSkills(CURATED_ENDPOINT, apiKey),
+      fetchSkills(`${BASE_ENDPOINT}?per_page=100&view=all-time`, apiKey),
+    ])
 
-    const leaderboard = await fetchSkills(`${BASE_ENDPOINT}?per_page=100&view=all-time`, apiKey)
-
-    if (leaderboard && leaderboard.length > 0) {
-      return Response.json(normalize(leaderboard))
-    }
-
+    if (curated && curated.length >= 15) return Response.json(normalize(curated))
+    if (leaderboard && leaderboard.length > 0) return Response.json(normalize(leaderboard))
     return Response.json(STATIC_SKILLS)
   } catch (error) {
     console.error("Error fetching skills:", error)
