@@ -4,7 +4,7 @@ import { type RefObject, useEffect, useRef, useState } from "react"
 import { Loader2, X } from "lucide-react"
 
 import { CATEGORIES, type Option, type SubCategory } from "@/data/categories"
-import { TRIGGER_TEMPLATES } from "@/app/_utils/constants"
+import { TRIGGER_TEMPLATE_MAP } from "@/app/_utils/constants"
 import { useFetchSkills } from "@/app/_hooks/useFetchSkills"
 import { useAppStore } from "@/store/useAppStore"
 import { useEditorContext } from "@/common/providers/EditorContext"
@@ -115,14 +115,14 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
           }
         }
       } else if (sub.type === "skills") {
-        const subSelected = selections[sub.id] ?? []
+        const subSelectedSet = new Set(selections[sub.id] ?? [])
         const opts = getOptionsForSub(sub)
         for (const opt of opts) {
-          if (subSelected.includes(opt.id)) {
+          if (subSelectedSet.has(opt.id)) {
             injectOption("Skills", opt.prompt)
             const triggers = skillTriggers[opt.id] ?? []
             for (const tplId of triggers) {
-              const tpl = TRIGGER_TEMPLATES.find((t) => t.id === tplId)
+              const tpl = TRIGGER_TEMPLATE_MAP.get(tplId)
               if (tpl) {
                 injectOption("Auto-invoke Skills", tpl.prompt.replace("{skill}", opt.label))
               }
@@ -130,9 +130,9 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
           }
         }
       } else {
-        const subSelected = selections[sub.id] ?? []
+        const subSelectedSet = new Set(selections[sub.id] ?? [])
         for (const opt of sub.options) {
-          if (subSelected.includes(opt.id)) {
+          if (subSelectedSet.has(opt.id)) {
             injectOption(category!.label, opt.prompt)
           }
         }

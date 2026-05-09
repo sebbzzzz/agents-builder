@@ -38,13 +38,10 @@ export function SubCategoryInputs({
 
   return (
     <div className="mb-5">
-        <div className="mb-2 flex items-center gap-2">
-          <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
-            {label}
-          </p>
-        </div>
+        <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wider uppercase">
+          {label}
+        </p>
 
-        {/* ── select (radio — few options) ──────────────────── */}
         {type === "select" && options.length < SELECT_THRESHOLD && (
           <RadioGroup
             value={selected[0] ?? ""}
@@ -63,7 +60,6 @@ export function SubCategoryInputs({
           </RadioGroup>
         )}
 
-        {/* ── select (dropdown — many options) ─────────────── */}
         {type === "select" && options.length >= SELECT_THRESHOLD && (
           <Select value={selected[0] ?? ""} onValueChange={(value) => onSelect(value || null)}>
             <SelectTrigger className="w-full text-xs">
@@ -79,7 +75,6 @@ export function SubCategoryInputs({
           </Select>
         )}
 
-        {/* ── input — text field per option ────────────────── */}
         {type === "input" && (
           <ul className="space-y-2">
             {options.map((opt) => (
@@ -97,7 +92,6 @@ export function SubCategoryInputs({
           </ul>
         )}
 
-        {/* ── skills — card + inline trigger checkboxes ─────── */}
         {type === "skills" && (
           <ul className="space-y-2">
             {options.map((opt) => {
@@ -144,7 +138,6 @@ export function SubCategoryInputs({
           </ul>
         )}
 
-        {/* ── multi / triggers — checkbox list ──────────────── */}
         {(type === "multi" || type === "triggers") && (
           <ul className="space-y-1.5">
             {options.map((opt) => {

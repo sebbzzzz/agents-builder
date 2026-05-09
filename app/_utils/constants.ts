@@ -28,3 +28,5 @@ export const TRIGGER_TEMPLATES: Array<{ id: string; label: string; prompt: strin
   { id: "trigger-debug", label: "When debugging an error", prompt: "Use `{skill}` when the user reports a bug or unexpected behavior." },
   { id: "trigger-before-commit", label: "Before committing", prompt: "Use `{skill}` before every commit to validate code quality." },
 ]
+
+export const TRIGGER_TEMPLATE_MAP = new Map(TRIGGER_TEMPLATES.map((t) => [t.id, t]))
