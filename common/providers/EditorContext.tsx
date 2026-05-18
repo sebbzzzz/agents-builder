@@ -9,7 +9,6 @@ import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
 
 import { useAutoSave } from "@/app/_hooks/useAutoSave"
-import { WELCOME_CONTENT } from "@/app/_utils/constants"
 import { parseHeadings } from "@/app/_utils/parseHeadings"
 import { useDocumentStore } from "@/store/useDocumentStore"
 
@@ -17,6 +16,8 @@ interface EditorContextValue {
   mount: (container: HTMLElement, content: string) => void
   destroy: () => void
   injectOption: (categoryLabel: string, prompt: string) => void
+  replaceContent: (text: string, markAsWelcome?: boolean) => void
+  getIsWelcome: () => boolean
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
@@ -24,6 +25,7 @@ const EditorContext = createContext<EditorContextValue | null>(null)
 export function EditorProvider({ children }: { children: React.ReactNode }) {
   const viewRef = useRef<CMEditorView | null>(null)
   const isWelcomeRef = useRef(true)
+  const isTypewritingRef = useRef(false)
 
   const setIsDirty = useDocumentStore((s) => s.setIsDirty)
   const scheduleAutoSave = useAutoSave()
@@ -38,7 +40,7 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
     (container: HTMLElement, content: string) => {
       if (!container) return
 
-      isWelcomeRef.current = content === WELCOME_CONTENT
+      isWelcomeRef.current = true
 
       viewRef.current = new EditorView({
         state: EditorState.create({
@@ -50,11 +52,14 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
             EditorView.lineWrapping,
             EditorView.updateListener.of((update) => {
               if (!update.docChanged) return
+              if (isTypewritingRef.current) return
               if (isWelcomeRef.current) {
                 isWelcomeRef.current = false
                 const view = update.view
                 Promise.resolve().then(() => {
-                  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" } })
+                  view.dispatch({
+                    changes: { from: 0, to: view.state.doc.length, insert: "# AGENTS.md" },
+                  })
                 })
                 return
               }
@@ -85,39 +90,53 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
     viewRef.current = null
   }, [])
 
-  const injectOption = useCallback((categoryLabel: string, prompt: string) => {
+  const replaceContent = useCallback((text: string, markAsWelcome = false) => {
     const view = viewRef.current
     if (!view) return
+    isTypewritingRef.current = true
+    view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text } })
+    isTypewritingRef.current = false
+    if (markAsWelcome) isWelcomeRef.current = true
+  }, [])
 
-    clearWelcome(view)
+  const getIsWelcome = useCallback(() => isWelcomeRef.current, [])
 
-    const doc = view.state.doc
-    const { h2 } = parseHeadings(doc)
-    const sectionIndex = h2.findIndex((h) => h.label === categoryLabel)
+  const injectOption = useCallback(
+    (categoryLabel: string, prompt: string) => {
+      const view = viewRef.current
+      if (!view) return
 
-    let insertPos: number
-    let insertText: string
+      clearWelcome(view)
 
-    if (sectionIndex !== -1) {
-      const nextH2 = h2[sectionIndex + 1]
-      if (nextH2) {
-        insertPos = nextH2.from
-        insertText = `${prompt}\n\n`
+      const doc = view.state.doc
+      const { h2 } = parseHeadings(doc)
+      const sectionIndex = h2.findIndex((h) => h.label === categoryLabel)
+
+      let insertPos: number
+      let insertText: string
+
+      if (sectionIndex !== -1) {
+        const nextH2 = h2[sectionIndex + 1]
+        if (nextH2) {
+          insertPos = nextH2.from
+          insertText = `${prompt}\n\n`
+        } else {
+          insertPos = doc.length
+          insertText = `\n\n${prompt}`
+        }
       } else {
         insertPos = doc.length
-        insertText = `\n\n${prompt}`
+        insertText = `\n\n## ${categoryLabel}\n\n${prompt}`
       }
-    } else {
-      insertPos = doc.length
-      insertText = `\n\n## ${categoryLabel}\n\n${prompt}`
-    }
 
-    view.dispatch({ changes: { from: insertPos, insert: insertText } })
-  }, [clearWelcome])
+      view.dispatch({ changes: { from: insertPos, insert: insertText } })
+    },
+    [clearWelcome],
+  )
 
   const value = useMemo(
-    () => ({ mount, destroy, injectOption }),
-    [mount, destroy, injectOption],
+    () => ({ mount, destroy, injectOption, replaceContent, getIsWelcome }),
+    [mount, destroy, injectOption, replaceContent, getIsWelcome],
   )
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>

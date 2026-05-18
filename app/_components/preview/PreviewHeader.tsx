@@ -62,7 +62,7 @@ export function PreviewHeader() {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center">
+      <div data-onboarding="export-buttons" className="flex items-center">
         <button
           disabled={!hasContent}
           onClick={handleCopy}
