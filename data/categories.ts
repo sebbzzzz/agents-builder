@@ -331,7 +331,7 @@ export const CATEGORIES: Category[] = [
             tooltip: "Fast, statically typed",
             tags: ["backend"],
             prompt:
-              "**Backend:** Go (stdlib or Gin)\n\n- Keep handlers thin — validate input, delegate to a service struct, return the response\n- Use `context.Context` for all request-scoped values and cancellation\n- Prefer the standard library before reaching for third-party packages\n- Define explicit error types; wrap errors with `fmt.Errorf(\"%w\", err)` for unwrapping",
+              '**Backend:** Go (stdlib or Gin)\n\n- Keep handlers thin — validate input, delegate to a service struct, return the response\n- Use `context.Context` for all request-scoped values and cancellation\n- Prefer the standard library before reaching for third-party packages\n- Define explicit error types; wrap errors with `fmt.Errorf("%w", err)` for unwrapping',
           },
         ],
       },
@@ -816,7 +816,7 @@ export const CATEGORIES: Category[] = [
             label: "isort",
             tooltip: "Alphabetically sorted imports",
             prompt:
-              "**Import sorting:** isort\n\n- Use isort to sort Python imports alphabetically within groups\n- Configure `profile = \"black\"` in `pyproject.toml` if Black is also in use\n- Run `isort .` before committing",
+              '**Import sorting:** isort\n\n- Use isort to sort Python imports alphabetically within groups\n- Configure `profile = "black"` in `pyproject.toml` if Black is also in use\n- Run `isort .` before committing',
           },
           {
             id: "line-length-88",
@@ -845,7 +845,7 @@ export const CATEGORIES: Category[] = [
             label: "Built-ins → External → Internal",
             tooltip: "Standard JS/TS convention",
             prompt:
-              "**Import order:** Built-ins → External packages → Internal modules\n\n```typescript\n// 1. Node built-ins\nimport { readFile } from \"fs/promises\"\n\n// 2. External packages\nimport { useState } from \"react\"\nimport { z } from \"zod\"\n\n// 3. Internal aliases\nimport { cn } from \"@/lib/cn\"\nimport { UserCard } from \"@/components/UserCard\"\n```\n\nSeparate each group with a blank line.",
+              '**Import order:** Built-ins → External packages → Internal modules\n\n```typescript\n// 1. Node built-ins\nimport { readFile } from "fs/promises"\n\n// 2. External packages\nimport { useState } from "react"\nimport { z } from "zod"\n\n// 3. Internal aliases\nimport { cn } from "@/lib/cn"\nimport { UserCard } from "@/components/UserCard"\n```\n\nSeparate each group with a blank line.',
           },
           {
             id: "imports-alphabetical",
@@ -858,14 +858,14 @@ export const CATEGORIES: Category[] = [
             label: "No relative imports from root",
             tooltip: "Always use path aliases",
             prompt:
-              "**Imports:** Never use deep relative paths.\n\n- ❌ `import { Button } from \"../../../components/Button\"`\n- ✅ `import { Button } from \"@/components/Button\"`\n- Configure path aliases in `tsconfig.json` and the bundler config",
+              '**Imports:** Never use deep relative paths.\n\n- ❌ `import { Button } from "../../../components/Button"`\n- ✅ `import { Button } from "@/components/Button"`\n- Configure path aliases in `tsconfig.json` and the bundler config',
           },
           {
             id: "path-aliases-required",
             label: "Path aliases required (`@/`)",
             tooltip: "@/components/Button not ../../components/Button",
             prompt:
-              "**Imports:** Always use the `@/` path alias for internal imports.\n\n- Configure `@/` → `./src` (or project root) in `tsconfig.json` and bundler config\n- ❌ `import { useAuth } from \"../../hooks/useAuth\"`\n- ✅ `import { useAuth } from \"@/hooks/useAuth\"`",
+              '**Imports:** Always use the `@/` path alias for internal imports.\n\n- Configure `@/` → `./src` (or project root) in `tsconfig.json` and bundler config\n- ❌ `import { useAuth } from "../../hooks/useAuth"`\n- ✅ `import { useAuth } from "@/hooks/useAuth"`',
           },
         ],
       },
@@ -899,7 +899,7 @@ export const CATEGORIES: Category[] = [
             label: "Double quotes for JSX attributes",
             tooltip: 'className="foo" — React convention',
             prompt:
-              "**JSX quotes:** Double quotes for JSX attribute values.\n\n- ✅ `<Button className=\"primary\" type=\"submit\" />`\n- ❌ `<Button className='primary' />`\n- Consistent with HTML convention and React community standard",
+              '**JSX quotes:** Double quotes for JSX attribute values.\n\n- ✅ `<Button className="primary" type="submit" />`\n- ❌ `<Button className=\'primary\' />`\n- Consistent with HTML convention and React community standard',
           },
         ],
       },
@@ -1036,7 +1036,7 @@ export const CATEGORIES: Category[] = [
             label: "Imperative mood",
             tooltip: '"Add feature" not "Added feature"',
             prompt:
-              "**Commits:** Write subject lines in the imperative mood.\n\n- ✅ `Add feature`, `Fix bug`, `Remove deprecated endpoint`\n- ❌ `Added feature`, `Fixing bug`, `Removes deprecated endpoint`\n- Reads as a command: \"If applied, this commit will **{subject}**\"",
+              '**Commits:** Write subject lines in the imperative mood.\n\n- ✅ `Add feature`, `Fix bug`, `Remove deprecated endpoint`\n- ❌ `Added feature`, `Fixing bug`, `Removes deprecated endpoint`\n- Reads as a command: "If applied, this commit will **{subject}**"',
           },
           {
             id: "max-72-chars",
@@ -1916,7 +1916,7 @@ export const CATEGORIES: Category[] = [
             id: "ci-env-parity",
             label: "Keep environments in parity",
             prompt:
-              "**Deployment:** Keep environment configurations in parity.\n\n- Differences between staging and production are known, documented, and intentional\n- \"Works in staging, broken in production\" is usually caused by undocumented environment differences\n- Infrastructure is defined as code (Terraform, Pulumi, CDK) — no manual cloud console changes",
+              '**Deployment:** Keep environment configurations in parity.\n\n- Differences between staging and production are known, documented, and intentional\n- "Works in staging, broken in production" is usually caused by undocumented environment differences\n- Infrastructure is defined as code (Terraform, Pulumi, CDK) — no manual cloud console changes',
           },
         ],
       },

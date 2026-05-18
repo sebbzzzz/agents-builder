@@ -54,6 +54,7 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Element
       if (target.closest("[data-base-ui-portal]")) return
+      if (target.closest(".driver-popover")) return
       const isInsidePanel = panelRef.current?.contains(target)
       const isInsideColumn = columnRef.current?.contains(target)
       if (!isInsidePanel && !isInsideColumn) clearActiveCategory()
@@ -153,6 +154,7 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
       ref={panelRef}
       role="region"
       aria-label={category.label}
+      data-onboarding="floating-panel"
       className="border-border bg-surface absolute top-0 left-full z-10 flex h-full w-72 flex-col overflow-hidden border-r-2 shadow-lg md:w-80"
     >
       <div className="border-border flex items-center justify-between border-b px-4 py-2.5">

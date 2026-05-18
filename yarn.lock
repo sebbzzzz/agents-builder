@@ -2600,6 +2600,7 @@ __metadata:
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     codemirror: "npm:^6.0.2"
+    driver.js: "npm:^1.4.0"
     eslint: "npm:^9"
     eslint-config-next: "npm:^16.2.2"
     eslint-config-prettier: "npm:^10.1.8"
@@ -3999,6 +4000,13 @@ __metadata:
   version: 17.4.1
   resolution: "dotenv@npm:17.4.1"
   checksum: 10c0/eb6ae592ee1e8f6b7f62e0f0c2827c4f27bbe9e00abe9d7910e06456e63dccd42f011de94da9450a63c07ccc52c318f527c1b56ad8e2c81a1a16314b53d4fd99
+  languageName: node
+  linkType: hard
+
+"driver.js@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "driver.js@npm:1.4.0"
+  checksum: 10c0/f868e85037d4180d55a883ec5bdad7a59e3b16e84438af4285ad605cab651b21fe565839a1607992362b0c028309d4ae6d052926d1c4ab67b2c62142a579b529
   languageName: node
   linkType: hard
 

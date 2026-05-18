@@ -12,7 +12,14 @@ interface OptionRowProps {
   className?: string
 }
 
-export function OptionRow({ label, tooltip, checked, control, onClick, className }: OptionRowProps) {
+export function OptionRow({
+  label,
+  tooltip,
+  checked,
+  control,
+  onClick,
+  className,
+}: OptionRowProps) {
   return (
     <label
       className={cn("flex w-full cursor-pointer items-start gap-2 transition-colors", className)}
