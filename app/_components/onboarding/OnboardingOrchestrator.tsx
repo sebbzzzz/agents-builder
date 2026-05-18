@@ -2,13 +2,36 @@
 
 import { useEffect, useRef } from "react"
 import { driver } from "driver.js"
-import "driver.js/dist/driver.css"
+import "./onboarding.css"
 
 import { WELCOME_CONTENT } from "@/app/_utils/constants"
 import { useEditorContext } from "@/common/providers/EditorContext"
 import { useAppStore } from "@/store/useAppStore"
 import { useDocumentStore } from "@/store/useDocumentStore"
 import { useOnboardingStore } from "@/store/useOnboardingStore"
+
+const STEP_META = [
+  {
+    eyebrow: "Welcome",
+    crumb: ["groundwork", "onboarding", "tour"],
+    count: "INTRO",
+    isWelcome: true,
+  },
+  {
+    eyebrow: "Step · categories",
+    crumb: ["groundwork", "sidebar"],
+    count: "01 / 04",
+    isWelcome: false,
+  },
+  {
+    eyebrow: "Step · options",
+    crumb: ["groundwork", "options panel"],
+    count: "02 / 04",
+    isWelcome: false,
+  },
+  { eyebrow: "Step · editor", crumb: ["groundwork", "editor"], count: "03 / 04", isWelcome: false },
+  { eyebrow: "Step · export", crumb: ["groundwork", "export"], count: "04 / 04", isWelcome: false },
+] as const
 
 const PROJECT_CONTEXT_PROMPT =
   "**Context:** Production project (serving real users)\n\n" +
@@ -49,6 +72,66 @@ export function OnboardingOrchestrator() {
       popoverClass: "gw-popover",
       allowClose: true,
       stageRadius: 4,
+      showProgress: true,
+      onPopoverRender: (popover, { state }) => {
+        const stepIndex = (state.activeIndex ?? 0) as number
+        const meta = STEP_META[stepIndex] ?? STEP_META[0]
+        const totalSteps = STEP_META.length
+
+        // Welcome step gets wider centered variant
+        if (meta.isWelcome) {
+          popover.wrapper.classList.add("gw-popover--welcome")
+        }
+
+        // Capture title text before we mutate the header element
+        const originalTitle = popover.title.innerText.trim()
+
+        // ── Header: clear and repopulate as flex row ──────────────────────
+        popover.title.innerHTML = ""
+
+        const mark = document.createElement("span")
+        mark.className = "gw-mark"
+        popover.title.appendChild(mark)
+
+        const crumb = document.createElement("span")
+        crumb.className = "gw-crumb"
+        crumb.innerHTML = meta.crumb
+          .map((part, i) => (i === 0 ? part : `<span class="sep">/</span>${part}`))
+          .join("")
+        popover.title.appendChild(crumb)
+
+        const countPill = document.createElement("span")
+        countPill.className = "gw-count"
+        countPill.textContent = meta.count
+        popover.title.appendChild(countPill)
+
+        // Move close button into header flex row (was absolutely positioned on wrapper)
+        popover.title.appendChild(popover.closeButton)
+        popover.title.style.display = "flex"
+
+        // ── Body: inject eyebrow + h2 before description ──────────────────
+        const eyebrow = document.createElement("span")
+        eyebrow.className = "gw-eyebrow"
+        eyebrow.textContent = meta.eyebrow
+        popover.description.parentElement!.insertBefore(eyebrow, popover.description)
+
+        const h2 = document.createElement("h2")
+        h2.className = "gw-title"
+        h2.textContent = originalTitle
+        popover.description.parentElement!.insertBefore(h2, popover.description)
+
+        // ── Footer: replace progress text with tick bars ──────────────────
+        const ticks = document.createElement("span")
+        ticks.className = "gw-ticks"
+        for (let i = 0; i < totalSteps; i++) {
+          const tick = document.createElement("span")
+          tick.className =
+            i < stepIndex ? "gw-tick is-done" : i === stepIndex ? "gw-tick is-now" : "gw-tick"
+          ticks.appendChild(tick)
+        }
+        popover.progress.innerHTML = ""
+        popover.progress.appendChild(ticks)
+      },
       onDestroyed: () => {
         const aside = document.querySelector("[data-onboarding='sidebar']") as HTMLElement | null
         if (aside) aside.style.removeProperty("overflow")
