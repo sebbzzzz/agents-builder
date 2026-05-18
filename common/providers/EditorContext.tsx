@@ -18,6 +18,7 @@ interface EditorContextValue {
   injectOption: (categoryLabel: string, prompt: string) => void
   replaceContent: (text: string, markAsWelcome?: boolean) => void
   getIsWelcome: () => boolean
+  save: () => void
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
@@ -27,6 +28,7 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
   const isWelcomeRef = useRef(true)
   const isTypewritingRef = useRef(false)
 
+  const setContent = useDocumentStore((s) => s.setContent)
   const setIsDirty = useDocumentStore((s) => s.setIsDirty)
   const scheduleAutoSave = useAutoSave()
 
@@ -134,9 +136,17 @@ export function EditorProvider({ children }: { children: React.ReactNode }) {
     [clearWelcome],
   )
 
+  const save = useCallback(() => {
+    const view = viewRef.current
+    if (!view) return
+    const text = view.state.doc.toString()
+    setContent(text)
+    setIsDirty(false)
+  }, [setContent, setIsDirty])
+
   const value = useMemo(
-    () => ({ mount, destroy, injectOption, replaceContent, getIsWelcome }),
-    [mount, destroy, injectOption, replaceContent, getIsWelcome],
+    () => ({ mount, destroy, injectOption, replaceContent, getIsWelcome, save }),
+    [mount, destroy, injectOption, replaceContent, getIsWelcome, save],
   )
 
   return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
