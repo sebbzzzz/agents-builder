@@ -2,9 +2,11 @@ import "@/styles/globals.css"
 
 import type { Metadata } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 
 import { cn } from "@/common/utils/cn"
 import { TooltipProvider } from "@/common/components/UI/Tooltip"
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/app/_utils/site"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,12 +21,32 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "groundwork",
-  description: "A decision guide that helps developers build AGENTS.md files for their projects.",
+  metadataBase: new URL(SITE_URL),
+  title: `${SITE_NAME} — Build your AGENTS.md`,
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "groundwork",
-    description: "A decision guide that helps developers build AGENTS.md files for their projects.",
+    title: `${SITE_NAME} — Build your AGENTS.md`,
+    description: SITE_DESCRIPTION,
     type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — Build your AGENTS.md`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — Build your AGENTS.md`,
+    description: SITE_DESCRIPTION,
+    images: ["/og-image.png"],
   },
   icons: {
     icon: [
@@ -42,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={cn("h-full font-sans", inter.variable, jetbrainsMono.variable)}>
       <body className="bg-background text-foreground flex h-dvh flex-col antialiased">
         <TooltipProvider>{children}</TooltipProvider>
+        <Analytics />
       </body>
     </html>
   )
