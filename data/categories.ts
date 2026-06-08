@@ -51,6 +51,7 @@ export interface Category {
   isPrimary?: boolean
   icon: string
   subCategories: SubCategory[]
+  disabled: boolean
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -66,6 +67,7 @@ export const CATEGORIES: Category[] = [
     label: "Project Context",
     description: "Sets the tone and level of strictness of the generated file.",
     icon: "Briefcase",
+    disabled: false,
     subCategories: [
       {
         id: "project-info",
@@ -139,6 +141,7 @@ export const CATEGORIES: Category[] = [
       "Define the languages, frameworks, and services used. Selections here filter options in other categories.",
     isPrimary: true,
     icon: "Layers",
+    disabled: false,
     subCategories: [
       {
         id: "project-type",
@@ -448,6 +451,7 @@ export const CATEGORIES: Category[] = [
     label: "Available Skills",
     description: "Select reusable AI agent skills from skills.sh to include in the project.",
     icon: "Zap",
+    disabled: true,
     subCategories: [
       {
         id: "skills-list",
@@ -464,6 +468,7 @@ export const CATEGORIES: Category[] = [
     label: "Architecture",
     description: "Define how the codebase is organized and what each layer is responsible for.",
     icon: "GitBranch",
+    disabled: false,
     subCategories: [
       {
         id: "codebase-structure",
@@ -740,6 +745,7 @@ export const CATEGORIES: Category[] = [
     label: "Styles",
     description: "Formatting rules, import ordering, and code style preferences.",
     icon: "Paintbrush",
+    disabled: false,
     subCategories: [
       {
         id: "formatting-js-ts",
@@ -912,6 +918,7 @@ export const CATEGORIES: Category[] = [
     label: "Conventions",
     description: "Naming rules for files, variables, functions, and commits.",
     icon: "BookOpen",
+    disabled: false,
     subCategories: [
       {
         id: "file-folder-naming",
@@ -1069,6 +1076,7 @@ export const CATEGORIES: Category[] = [
     label: "Patterns",
     description: "Architectural and code patterns the agent should actively apply.",
     icon: "Grid",
+    disabled: false,
     subCategories: [
       {
         id: "patterns-list",
@@ -1169,6 +1177,7 @@ export const CATEGORIES: Category[] = [
     label: "Anti-patterns",
     description: "Patterns the agent must actively avoid.",
     icon: "ShieldOff",
+    disabled: false,
     subCategories: [
       {
         id: "anti-patterns-list",
@@ -1267,6 +1276,7 @@ export const CATEGORIES: Category[] = [
     label: "Workflows",
     description: "Development commands, branching strategy, PR process, and pre-commit checklist.",
     icon: "Terminal",
+    disabled: false,
     subCategories: [
       {
         id: "dev-commands",
@@ -1488,6 +1498,7 @@ export const CATEGORIES: Category[] = [
     label: "Testing",
     description: "Testing requirements, frameworks, file organization, and coverage rules.",
     icon: "CheckCircle",
+    disabled: false,
     subCategories: [
       {
         id: "testing-rules",
@@ -1574,6 +1585,7 @@ export const CATEGORIES: Category[] = [
     label: "Permission Boundaries",
     description: "Define what the agent can always do, should ask before, and must never do.",
     icon: "ShieldCheck",
+    disabled: false,
     subCategories: [
       {
         id: "always-allowed",
@@ -1711,6 +1723,7 @@ export const CATEGORIES: Category[] = [
     label: "Security",
     description: "Secrets handling, input validation, and vulnerability prevention.",
     icon: "Lock",
+    disabled: false,
     subCategories: [
       {
         id: "secrets-hygiene",
@@ -1783,6 +1796,7 @@ export const CATEGORIES: Category[] = [
     label: "Environment",
     description: "Prerequisites, tool versions, and setup instructions.",
     icon: "Settings2",
+    disabled: false,
     subCategories: [
       {
         id: "prerequisites",
@@ -1851,6 +1865,7 @@ export const CATEGORIES: Category[] = [
     label: "Deployment",
     description: "Deployment environments, CI/CD pipeline, and release procedures.",
     icon: "Rocket",
+    disabled: false,
     subCategories: [
       {
         id: "deployment-environments",

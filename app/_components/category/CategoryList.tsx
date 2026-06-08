@@ -52,10 +52,12 @@ export function CategoryList() {
   const width = useWindowWidth()
   const isMobile = width < MOBILE_BREAKPOINT_PX
 
+  const availableCategories = CATEGORIES.filter((c) => !c.disabled)
+
   return (
     <nav className="flex-1 overflow-y-auto">
       <ul className="flex flex-col">
-        {CATEGORIES.map((category) => {
+        {availableCategories.map((category) => {
           const isActive = activeCategory === category.id
           const Icon = ICON_MAP[category.icon]
 
