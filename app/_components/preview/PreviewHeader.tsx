@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { cn } from "@/common/utils/cn"
 import { useEditorContext } from "@/common/providers/EditorContext"
+import { AnalyticsEvent, trackEvent } from "@/app/_utils/analytics"
 import { stripMarkers } from "@/app/_utils/stripMarkers"
 import { useAppStore } from "@/store/useAppStore"
 import { useDocumentStore } from "@/store/useDocumentStore"
@@ -21,13 +22,17 @@ export function PreviewHeader() {
   function handleCopy() {
     save()
     navigator.clipboard.writeText(stripMarkers(useDocumentStore.getState().content))
+    trackEvent(AnalyticsEvent.CopyDocument)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
   function handleExport() {
     save()
-    const blob = new Blob([stripMarkers(useDocumentStore.getState().content)], { type: "text/markdown" })
+    trackEvent(AnalyticsEvent.ExportDocument)
+    const blob = new Blob([stripMarkers(useDocumentStore.getState().content)], {
+      type: "text/markdown",
+    })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url

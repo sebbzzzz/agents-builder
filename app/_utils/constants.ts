@@ -1,4 +1,4 @@
-export const WELCOME_CONTENT = `# AGENTS.md Builder
+export const WELCOME_CONTENT = `# groundwork
 
 Your AI coding agent is only as good as the context you give it.
 \`AGENTS.md\` is how you do that — it's the file that tells your agent
@@ -13,7 +13,7 @@ knows what it's doing.
 
 ---
 
-*Built by Seb · github.com/sebbzzzz/agents-builder*`
+*groundwork — built by Seb · seb.bz*`
 
 export const SELECT_THRESHOLD = 5
 export const MOBILE_BREAKPOINT_PX = 768

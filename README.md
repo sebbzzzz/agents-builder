@@ -1,6 +1,6 @@
-# AGENTS.md Generator
+# groundwork
 
-A decision guide that helps developers build `AGENTS.md` files for their projects. Not a form filler — a discovery tool. Browse categories, explore options with tradeoff context, and watch your file build itself in real time.
+**groundwork** is a decision guide that helps developers build `AGENTS.md` files for their projects. Not a form filler — a discovery tool. Browse categories, explore options with tradeoff context, and watch your file build itself in real time.
 
 ## What it does
 

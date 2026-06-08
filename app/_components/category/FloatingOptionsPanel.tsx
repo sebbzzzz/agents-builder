@@ -4,6 +4,7 @@ import { type RefObject, useEffect, useRef, useState } from "react"
 import { Loader2, X } from "lucide-react"
 
 import { CATEGORIES, type Option, type SubCategory } from "@/data/categories"
+import { AnalyticsEvent, trackEvent } from "@/app/_utils/analytics"
 import { TRIGGER_TEMPLATE_MAP } from "@/app/_utils/constants"
 import { useFetchSkills } from "@/app/_hooks/useFetchSkills"
 import { useAppStore } from "@/store/useAppStore"
@@ -139,6 +140,7 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
         }
       }
     }
+    trackEvent(AnalyticsEvent.AddToDocument, { category: category!.id })
     setSelections({})
     setInputValues({})
     setSkillTriggers({})
