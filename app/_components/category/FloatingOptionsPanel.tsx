@@ -55,7 +55,7 @@ export function FloatingOptionsPanel({ columnRef }: FloatingOptionsPanelProps) {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Element
       if (target.closest("[data-base-ui-portal]")) return
-      if (target.closest(".driver-popover")) return
+      if (target.closest(".gw-popover")) return
       const isInsidePanel = panelRef.current?.contains(target)
       const isInsideColumn = columnRef.current?.contains(target)
       if (!isInsidePanel && !isInsideColumn) clearActiveCategory()
