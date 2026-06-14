@@ -17,7 +17,7 @@ The system SHALL check `localStorage` for the key `onboarding_complete` on every
 ---
 
 ### Requirement: Tour has exactly 5 steps
-The tour SHALL consist of 5 sequential steps delivered via driver.js spotlight modals.
+The tour SHALL consist of 5 sequential steps delivered as spotlight modals via the `@reactour/tour` engine.
 
 #### Scenario: Step 1 — Welcome modal
 - **WHEN** the tour starts
@@ -68,7 +68,7 @@ The system SHALL automatically open the Project Context category and inject a de
 
 #### Scenario: Auto-open on step 2→3 transition
 - **WHEN** the user advances from step 2 to step 3
-- **THEN** `setActiveCategory("project-context")` is called and the floating panel mounts before driver.js targets it
+- **THEN** `setActiveCategory("project-context")` is called and the floating panel mounts before the tour positions its spotlight and popover on it
 
 #### Scenario: Auto-inject on step 3→4 transition
 - **WHEN** the user advances from step 3 to step 4
@@ -77,7 +77,7 @@ The system SHALL automatically open the Project Context category and inject a de
 ---
 
 ### Requirement: Tour card displays three-zone chrome layout
-The tour popover SHALL render a header zone, body zone, and footer zone matching the style reference card anatomy. The `onPopoverRender` callback SHALL inject supplementary DOM elements into driver.js's generated popover after each step renders.
+The tour popover SHALL render a header zone, body zone, and footer zone matching the style reference card anatomy. The card SHALL be authored as a React component whose JSX renders these zones directly; the system SHALL NOT inject supplementary DOM elements into a library-generated popover after render.
 
 #### Scenario: Header zone is populated on every step
 - **WHEN** any tour step renders
