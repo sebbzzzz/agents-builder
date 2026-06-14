@@ -5,7 +5,7 @@ import { useRef } from "react"
 import { CategoryHeader } from "@/app/_components/category/CategoryHeader"
 import { CategoryList } from "@/app/_components/category/CategoryList"
 import { FloatingOptionsPanel } from "@/app/_components/category/FloatingOptionsPanel"
-import { OnboardingOrchestrator } from "@/app/_components/onboarding/OnboardingOrchestrator"
+import { OnboardingTour } from "@/app/_components/onboarding/OnboardingTour"
 import { PreviewPanel } from "@/app/_components/preview/PreviewPanel"
 import { EditorProvider } from "@/common/providers/EditorContext"
 import { useAppStore } from "@/store/useAppStore"
@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <EditorProvider>
-      <OnboardingOrchestrator />
+      <OnboardingTour />
       <CategoryHeader />
 
       <div className="flex flex-1 overflow-hidden">

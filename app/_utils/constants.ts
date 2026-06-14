@@ -9,11 +9,7 @@ your project, and hit **Add to document**. Build it piece by piece,
 exactly the way you work.
 
 Drop the result in the root of your repo and your agent finally
-knows what it's doing.
-
----
-
-*groundwork — built by Seb · seb.bz*`
+knows what it's doing.`
 
 export const SELECT_THRESHOLD = 5
 export const MOBILE_BREAKPOINT_PX = 768
