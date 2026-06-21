@@ -1,5 +1,7 @@
 import { LogoMark } from "@/common/components/LogoMark"
 
+import { HeaderActions } from "./HeaderActions"
+
 export function CategoryHeader() {
   return (
     <header className="border-border bg-surface flex items-center justify-between gap-2 border-b px-4 py-3">
@@ -10,12 +12,7 @@ export function CategoryHeader() {
         </div>
       </div>
 
-      <div className="text-muted-foreground font-mono text-xs">
-        By:{" "}
-        <a href="https://seb.bz/" className="text-primary hover:underline" target="_blank">
-          seb.bz
-        </a>
-      </div>
+      <HeaderActions />
     </header>
   )
 }
