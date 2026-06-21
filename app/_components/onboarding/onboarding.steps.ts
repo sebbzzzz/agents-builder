@@ -16,7 +16,7 @@ export const SIDEBAR_SELECTOR = '[data-onboarding="sidebar"]'
 export const STEP_META = [
   {
     eyebrow: "Welcome",
-    crumb: ["groundwork", "onboarding", "tour"],
+    crumb: ["onboarding", "tour"],
     count: "INTRO",
     isWelcome: true,
     title: "Welcome to groundwork",
@@ -25,8 +25,8 @@ export const STEP_META = [
     nextLabel: "Start tour →",
   },
   {
-    eyebrow: "Step · categories",
-    crumb: ["groundwork", "sidebar"],
+    eyebrow: "categories",
+    crumb: ["sidebar"],
     count: "01 / 04",
     isWelcome: false,
     title: "Your categories",
@@ -35,8 +35,8 @@ export const STEP_META = [
     nextLabel: "Next",
   },
   {
-    eyebrow: "Step · options",
-    crumb: ["groundwork", "options panel"],
+    eyebrow: "options",
+    crumb: ["options panel"],
     count: "02 / 04",
     isWelcome: false,
     title: "Pick your options",
@@ -45,8 +45,8 @@ export const STEP_META = [
     nextLabel: "Next",
   },
   {
-    eyebrow: "Step · editor",
-    crumb: ["groundwork", "editor"],
+    eyebrow: "editor",
+    crumb: ["editor"],
     count: "03 / 04",
     isWelcome: false,
     title: "Your document",
@@ -55,8 +55,8 @@ export const STEP_META = [
     nextLabel: "Next",
   },
   {
-    eyebrow: "Step · export",
-    crumb: ["groundwork", "export"],
+    eyebrow: "export",
+    crumb: ["export"],
     count: "04 / 04",
     isWelcome: false,
     title: "Get your file",

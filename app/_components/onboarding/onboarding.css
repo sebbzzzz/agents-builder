@@ -4,17 +4,12 @@
    content. Class names map 1:1 to TourCard's JSX.
    ──────────────────────────────────────────────────────────────────────────── */
 
-@keyframes tour-btn-shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50%       { background-position: 100% 50%; }
-}
-
 .gw-popover {
   width: 360px;
   max-width: calc(100vw - 32px);
   min-width: 0;
   padding: 0;
-  background: var(--surface);
+  background: var(--background);
   border: 1px solid var(--border-strong);
   border-radius: 5px;
   box-shadow:
@@ -26,16 +21,6 @@
   position: relative;
 }
 
-.gw-popover::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(var(--accent-faint) 1px, transparent 1px) 0 0 / 100% 22px;
-  pointer-events: none;
-  opacity: 0.55;
-  z-index: 0;
-}
-
 .gw-popover--welcome { width: 460px; }
 
 /* ── Header ── */
@@ -45,7 +30,7 @@
   gap: 10px;
   padding: 11px 14px 10px;
   border-bottom: 1px solid var(--border);
-  background: oklch(0.17 0.008 60 / 0.7);
+  background: var(--surface);
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 400;
@@ -57,21 +42,6 @@
   z-index: 1;
 }
 
-.gw-popover .gw-mark {
-  width: 12px;
-  height: 12px;
-  border: 1.5px solid var(--accent);
-  position: relative;
-  flex-shrink: 0;
-  display: inline-block;
-}
-.gw-popover .gw-mark::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  background: var(--accent);
-  opacity: 0.25;
-}
 
 .gw-popover .gw-crumb {
   color: var(--foreground-2);
@@ -92,18 +62,14 @@
   flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--accent-2);
+  color: var(--muted-foreground);
   letter-spacing: 0.14em;
-  background: var(--accent-faint);
-  border: 1px solid var(--accent-ghost);
-  border-radius: 3px;
-  padding: 2px 7px;
   line-height: 1.4;
 }
 
 .gw-popover .gw-close {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +79,7 @@
   border-radius: 3px;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1;
   flex-shrink: 0;
   padding: 0;
@@ -132,7 +98,7 @@
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--accent-2);
+  color: var(--accent);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   margin: 20px 22px 12px;
@@ -190,7 +156,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px 16px;
-  border-top: 1px dashed var(--border);
+  border-top: 1px solid var(--border);
   margin-top: 14px;
   position: relative;
   z-index: 1;
@@ -236,29 +202,3 @@
   background: transparent;
 }
 
-.gw-popover .gw-next {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  text-transform: none;
-  color: var(--primary-foreground);
-  border: none;
-  background: linear-gradient(90deg, #ffb067, #ff781d, #ffb067);
-  background-size: 200% 100%;
-  padding: 7px 16px 7px 14px;
-  border-radius: 3px;
-  box-shadow: 0 4px 14px -4px var(--accent-ghost);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  text-shadow: none;
-  animation: tour-btn-shimmer 3.4s ease-in-out infinite;
-  transition: transform 120ms, box-shadow 120ms;
-}
-.gw-popover .gw-next:hover,
-.gw-popover .gw-next:focus {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 22px -6px oklch(0.60 0.15 44 / 0.7);
-}
