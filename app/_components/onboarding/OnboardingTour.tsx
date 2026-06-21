@@ -20,7 +20,7 @@ import { SIDEBAR_SELECTOR, TOUR_STEPS } from "./onboarding.steps"
  * single effect resets the editor and sets the completion flag.
  */
 function TourStarter() {
-  const { isOpen, setIsOpen } = useTour()
+  const { isOpen, setIsOpen, setCurrentStep } = useTour()
   const isActive = useOnboardingStore((s) => s.isActive)
   const complete = useOnboardingStore((s) => s.complete)
   const clearActiveCategory = useAppStore((s) => s.clearActiveCategory)
@@ -28,9 +28,14 @@ function TourStarter() {
   const setContent = useDocumentStore((s) => s.setContent)
   const wasOpen = useRef(false)
 
+  // Rewind to step 0 before opening so a replay (restart) always starts from the
+  // beginning — reactour otherwise retains the step the last run ended on.
   useEffect(() => {
-    if (isActive) setIsOpen(true)
-  }, [isActive, setIsOpen])
+    if (isActive) {
+      setCurrentStep(0)
+      setIsOpen(true)
+    }
+  }, [isActive, setIsOpen, setCurrentStep])
 
   useEffect(() => {
     if (wasOpen.current && !isOpen) {

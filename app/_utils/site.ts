@@ -8,3 +8,6 @@ export const SITE_DESCRIPTION =
 // Production origin, set via NEXT_PUBLIC_SITE_URL in the Vercel environment.
 // Falls back to localhost for local development.
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_ORIGIN
+
+// Author's portfolio — linked from the header Contact icon and the About modal.
+export const PORTFOLIO_URL = "https://seb.bz/"
