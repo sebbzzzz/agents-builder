@@ -10,13 +10,18 @@ interface ModalProps {
   children: ReactNode
   /** Accessible label for the dialog and its close button. */
   label?: string
+  /**
+   * Skip the default surface panel + close button and render children directly
+   * in the overlay. Use when the caller supplies its own fully-styled card.
+   */
+  bare?: boolean
 }
 
 /**
  * Minimal reusable dialog primitive: portals to `document.body`, dims the page,
  * and closes on backdrop click or Escape. Callers own the panel's inner content.
  */
-export function Modal({ isOpen, onClose, children, label = "Dialog" }: ModalProps) {
+export function Modal({ isOpen, onClose, children, label = "Dialog", bare = false }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -44,16 +49,22 @@ export function Modal({ isOpen, onClose, children, label = "Dialog" }: ModalProp
         aria-label={label}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="border-border bg-surface relative w-full max-w-md rounded-md border shadow-xl outline-none"
+        className={
+          bare
+            ? "outline-none"
+            : "border-border bg-surface relative w-full max-w-md rounded-md border shadow-xl outline-none"
+        }
       >
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="text-muted-foreground hover:text-foreground absolute top-3 right-3 rounded p-1 transition-colors"
-        >
-          <X size={16} />
-        </button>
+        {!bare && (
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground absolute top-3 right-3 rounded p-1 transition-colors"
+          >
+            <X size={16} />
+          </button>
+        )}
         {children}
       </div>
     </div>,
