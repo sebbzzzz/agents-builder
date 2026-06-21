@@ -3,6 +3,8 @@
 import type { PopoverContentProps } from "@reactour/tour"
 
 import { cn } from "@/common/utils/cn"
+import { LogoMark } from "@/common/components/LogoMark"
+import { ShimmerButton } from "@/common/components/UI/ShimmerButton"
 import { useEditorContext } from "@/common/providers/EditorContext"
 import { useAppStore } from "@/store/useAppStore"
 
@@ -78,7 +80,7 @@ export function TourCard({ currentStep, setCurrentStep, setIsOpen }: PopoverCont
   return (
     <div className={cn("gw-popover", meta.isWelcome && "gw-popover--welcome")}>
       <div className="gw-header">
-        <span className="gw-mark" aria-hidden />
+        <LogoMark size={14} />
         <span className="gw-crumb">
           {meta.crumb.map((part, i) => (
             <span key={part}>
@@ -122,9 +124,9 @@ export function TourCard({ currentStep, setCurrentStep, setIsOpen }: PopoverCont
               Back
             </button>
           )}
-          <button type="button" className="gw-next" onClick={next}>
+          <ShimmerButton onClick={next}>
             {meta.nextLabel}
-          </button>
+          </ShimmerButton>
         </div>
       </div>
     </div>
